@@ -11,7 +11,7 @@ import {
 	MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, DashboardOutlined, HomeOutlined, InfoCircleOutlined,
 	DownOutlined, SmileOutlined, UserOutlined, LockOutlined, VideoCameraOutlined, ProjectOutlined, ApartmentOutlined,
 	DatabaseOutlined, PlusOutlined, UndoOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, SearchOutlined,
-	EyeOutlined, ReloadOutlined
+	EyeOutlined, ReloadOutlined, UploadOutlined
 } from '@ant-design/icons-vue'
 
 const app = createApp(App);
@@ -43,5 +43,6 @@ app.component('ExclamationCircleOutlined', ExclamationCircleOutlined)
 app.component('SearchOutlined', SearchOutlined)
 app.component('EyeOutlined', EyeOutlined)
 app.component('ReloadOutlined', ReloadOutlined)
+app.component('UploadOutlined', UploadOutlined)
 
 app.mount('#app')

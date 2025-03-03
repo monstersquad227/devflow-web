@@ -21,28 +21,27 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-    data() {
-        return {
-            loading: false,
-            account: '',
-            password: '',
-        }
-    },
-    methods: {
-        loginSubmit() {
-            this.loading = true;
-            const data = {
-                account: this.account,
-                password: this.password,
-            }
-            console.log(data)
-            this.$router.push('/home');
-        }
+const account = ref('');
+const password = ref('');
+const loading = ref(false);
+const router = useRouter();
+
+const loginSubmit = async () => {
+    loading.value = true;
+    try {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        loading.value = false;
+        await router.push('/home')
+        console.log('登录成功！');
+    } catch (error) {
+        loading.value = false;
+        console.error('登录失败！', error);
     }
-}
+};
 </script>
 
 <style scoped>
