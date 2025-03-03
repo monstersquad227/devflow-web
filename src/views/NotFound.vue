@@ -1,6 +1,6 @@
 <template>
-    <div class="wscn-http404-container">
-        <div class="wscn-http404">
+    <div class="scn-http404-container">
+        <div class="scn-http404">
             <div class="pic-404">
                 <img class="pic-404__parent" src="@/assets/NotFound/NotFound.png" alt="404">
                 <img class="pic-404__child left" src="@/assets/NotFound/NotFoundCloud.png" alt="404">
@@ -30,13 +30,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wscn-http404-container{
+.scn-http404-container{
     transform: translate(-50%,-50%);
     position: absolute;
     top: 40%;
     left: 50%;
 }
-.wscn-http404 {
+.scn-http404 {
     position: relative;
     width: 1200px;
     padding: 0 50px;
