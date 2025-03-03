@@ -2,10 +2,10 @@
     <div class="scn-http404-container">
         <div class="scn-http404">
             <div class="pic-404">
-                <img class="pic-404__parent" src="@/assets/NotFound/NotFound.png" alt="404">
-                <img class="pic-404__child left" src="@/assets/NotFound/NotFoundCloud.png" alt="404">
-                <img class="pic-404__child mid" src="@/assets/NotFound/NotFoundCloud.png" alt="404">
-                <img class="pic-404__child right" src="@/assets/NotFound/NotFoundCloud.png" alt="404">
+                <img class="pic-404__parent" src="../../assets/NotFound/NotFound.png" alt="404">
+                <img class="pic-404__child left" src="../../assets/NotFound/NotFoundCloud.png" alt="404">
+                <img class="pic-404__child mid" src="../../assets/NotFound/NotFoundCloud.png" alt="404">
+                <img class="pic-404__child right" src="../../assets/NotFound/NotFoundCloud.png" alt="404">
             </div>
             <div class="bullshit">
                 <div class="bullshit__oops">OOPS!</div>

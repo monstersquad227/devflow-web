@@ -24,6 +24,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import store from "@/store";
 
 const account = ref('');
 const password = ref('');
@@ -34,8 +35,10 @@ const loginSubmit = async () => {
     loading.value = true;
     try {
         await new Promise(resolve => setTimeout(resolve, 3000));
+
         loading.value = false;
-        await router.push('/home')
+        await store.dispatch('setUserInfo', '')
+        await router.replace('/')
         console.log('登录成功！');
     } catch (error) {
         loading.value = false;
