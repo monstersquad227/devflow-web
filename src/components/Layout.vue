@@ -1,34 +1,38 @@
 <template>
     <a-layout id="components-layout-demo-custom-trigger">
         <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-            <div class="logo" />
-            <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-                <a-menu-item key="1">
+            <div class="logo" @click="handleLogo"/>
+            <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="handleClick">
+                <a-menu-item key="/project">
                     <UserOutlined />
-                    <span>nav 1</span>
+                    <span>项目</span>
                 </a-menu-item>
-                <a-menu-item key="2">
+                <a-menu-item key="/setting">
                     <VideoCameraOutlined />
-                    <span>nav 2</span>
-                </a-menu-item>
-                <a-menu-item key="3">
-                    <UploadOutlined />
-                    <span>nav 3</span>
+                    <span>设置</span>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
         <a-layout>
             <a-layout-header style="background: #fff; padding: 0">
-                <!-- 左侧收缩小图标 -->
-                <MenuUnfoldOutlined
-                    v-if="collapsed"
-                    class="trigger"
-                    @click="() => (collapsed = !collapsed)"
-                />
-                <MenuFoldOutlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-
-                <!-- 右侧下拉框 -->
-<!--                <Dropdown />-->
+                    <MenuUnfoldOutlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)"/>
+                    <MenuFoldOutlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+                    <div :style="{ display: 'inline-block', float: 'right', margin: '0 30px 0 0' }">
+                        <img class="avatar" src="@/assets/avatar.png" alt="avatar" />
+                        <a-dropdown>
+                            <a class="ant-dropdown-link" @click.prevent>
+                                {{ accountName }}
+                                <DownOutlined />
+                            </a>
+                            <template #overlay>
+                                <a-menu>
+<!--                                    <a-menu-item>1st menu item</a-menu-item>-->
+<!--                                    <a-menu-divider />-->
+                                    <a-menu-item @click="logout()">退出登录</a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </div>
             </a-layout-header>
 
             <!-- 正文主区域 -->
@@ -44,9 +48,28 @@
 
 <script setup>
 
-import { ref } from 'vue';
-const selectedKeys = ref(['1']);
+import {computed, ref, watchEffect} from 'vue';
+import router from "@/router";
+import store from "../store";
+const selectedKeys = ref(['']);
 const collapsed = ref(false);
+
+const userInfo = computed(() => store.getters.userInfo);
+const accountName = userInfo.value.user.name
+
+watchEffect(() => {
+    selectedKeys.value = [router.currentRoute.value.path];
+});
+function handleClick(info) {
+    router.push(info.key);
+}
+function handleLogo() {
+    router.push('/');
+}
+function logout() {
+    store.dispatch('clearUserInfo')
+    router.push('/login')
+}
 
 </script>
 
@@ -68,10 +91,14 @@ html, body, #app, #components-layout-demo-custom-trigger {
 }
 
 #components-layout-demo-custom-trigger .logo {
-
     height: 32px;
     background: rgba(255, 255, 255, 0.3);
     margin: 16px;
+}
+.avatar {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 10px;
 }
 
 .site-layout .site-layout-background {

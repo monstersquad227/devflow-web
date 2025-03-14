@@ -25,6 +25,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import store from "@/store";
+import {Base64} from "js-base64";
+import {login} from "@/http/base";
+import {message} from "ant-design-vue";
 
 const account = ref('');
 const password = ref('');
@@ -33,17 +36,25 @@ const router = useRouter();
 
 const loginSubmit = async () => {
     loading.value = true;
-    try {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+    login(Base64.encode(account.value), Base64.encode(password.value))
+        .then(async (res) => {
+            if (res.code === 0) {
+                if (res.result) {
+                    loading.value = false;
+                    await store.dispatch('setUserInfo', res.result)
+                    await router.replace('/')
+                } else {
+                    message.error('数据不存在')
+                }
+            } else {
+                message.error(res.message || '服务不可用，请稍后再试')
+            }
+        })
 
-        loading.value = false;
-        await store.dispatch('setUserInfo', '')
-        await router.replace('/')
-        console.log('登录成功！');
-    } catch (error) {
-        loading.value = false;
-        console.error('登录失败！', error);
-    }
+        // loading.value = false;
+        // await store.dispatch('setUserInfo', '')
+        // await router.replace('/')
+        // console.log('登录成功！');
 };
 </script>
 

@@ -8,11 +8,6 @@ const routes = [
         component: () => import('@/views/Login/Login.vue')
     },
     {
-        path: '/:pathMatch(.*)*',
-        name: 'NotFound',
-        component: () => import('@/views/NotFound/NotFound.vue'),
-    },
-    {
         path: '/',
         name: 'Dashboard',
         component: ()=> import('@/views/Dashboard/Dashboard.vue'),
@@ -30,6 +25,20 @@ const routes = [
             title: '项目列表'
         }
     },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: () => import('@/views/Project/Project.vue'),
+        meta: {
+            auth: true,
+            title: '配置列表'
+        }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('@/views/NotFound/NotFound.vue'),
+    }
 ]
 
 const WhiteList = ['NotFound']
@@ -49,12 +58,10 @@ router.beforeEach((to, from, next) => {
     if (store.getters.isLogin) {
         if (to.name === "Login") {
             next('/')
-        } else if (to.name === 'Dashboard') {
+        } else {
             next()
         }
     } else {
-        console.log(store.getters.isLogin)
-        console.log(to.name)
         next(to.meta?.auth ? '/login' : undefined);
     }
 })
