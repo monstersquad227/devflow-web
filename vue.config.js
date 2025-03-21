@@ -8,6 +8,9 @@ module.exports = defineConfig({
                 target: 'http://10.11.11.47:8080',
                 changeOrigin: true,
             }
+        },
+        client: {
+            overlay: false
         }
     }
 })

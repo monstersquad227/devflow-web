@@ -11,8 +11,12 @@ import {
 	MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined, DashboardOutlined, HomeOutlined, InfoCircleOutlined,
 	DownOutlined, SmileOutlined, UserOutlined, LockOutlined, VideoCameraOutlined, ProjectOutlined, ApartmentOutlined,
 	DatabaseOutlined, PlusOutlined, UndoOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, SearchOutlined,
-	EyeOutlined, ReloadOutlined, UploadOutlined
+	EyeOutlined, ReloadOutlined, UploadOutlined, PlusCircleOutlined, AppstoreOutlined, HddOutlined, EnvironmentOutlined,
+	FileImageOutlined
 } from '@ant-design/icons-vue'
+
+import DockerOutlined from '@/components/icons/DockerOutlined.vue'
+
 
 const app = createApp(App);
 
@@ -44,5 +48,11 @@ app.component('SearchOutlined', SearchOutlined)
 app.component('EyeOutlined', EyeOutlined)
 app.component('ReloadOutlined', ReloadOutlined)
 app.component('UploadOutlined', UploadOutlined)
+app.component('PlusCircleOutlined', PlusCircleOutlined)
+app.component('AppstoreOutlined', AppstoreOutlined)
+app.component('HddOutlined', HddOutlined)
+app.component('EnvironmentOutlined', EnvironmentOutlined)
+app.component('FileImageOutlined', FileImageOutlined)
+app.component('DockerOutlined', DockerOutlined)
 
 app.mount('#app')

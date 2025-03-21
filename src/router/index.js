@@ -12,8 +12,7 @@ const routes = [
         name: 'Dashboard',
         component: ()=> import('@/views/Dashboard/Dashboard.vue'),
         meta: {
-            auth: true,
-            title: '首页'
+            auth: true
         }
     },
     {
@@ -22,16 +21,28 @@ const routes = [
         component: () => import('@/views/Project/Project.vue'),
         meta: {
             auth: true,
-            title: '项目列表'
+            title: '项目列表',
+            icon: 'AppstoreOutlined'
+        }
+    },
+    {
+        path: '/vm',
+        name: 'Vm',
+        component: () => import('@/views/Vm/Vm.vue'),
+        meta: {
+            auth: true,
+            title: '虚拟机列表',
+            icon: 'HddOutlined'
         }
     },
     {
         path: '/setting',
         name: 'Setting',
-        component: () => import('@/views/Project/Project.vue'),
+        component: () => import('@/views/Setting/Setting.vue'),
         meta: {
             auth: true,
-            title: '配置列表'
+            title: '配置列表',
+            icon: 'SettingOutlined'
         }
     },
     {

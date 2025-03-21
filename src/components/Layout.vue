@@ -3,13 +3,9 @@
         <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
             <div class="logo" @click="handleLogo"/>
             <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="handleClick">
-                <a-menu-item key="/project">
-                    <UserOutlined />
-                    <span>项目</span>
-                </a-menu-item>
-                <a-menu-item key="/setting">
-                    <VideoCameraOutlined />
-                    <span>设置</span>
+                <a-menu-item v-for="route in menuRoutes" :key="route.path">
+                    <component :is="route.meta.icon" />
+                    <span>{{ route.meta.title }}</span>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
@@ -26,8 +22,6 @@
                             </a>
                             <template #overlay>
                                 <a-menu>
-<!--                                    <a-menu-item>1st menu item</a-menu-item>-->
-<!--                                    <a-menu-divider />-->
                                     <a-menu-item @click="logout()">退出登录</a-menu-item>
                                 </a-menu>
                             </template>
@@ -49,8 +43,11 @@
 <script setup>
 
 import {computed, ref, watchEffect} from 'vue';
-import router from "@/router";
+import { useRouter, useRoute } from "vue-router";
 import store from "../store";
+
+const router = useRouter();
+const route = useRoute();
 const selectedKeys = ref(['']);
 const collapsed = ref(false);
 
@@ -60,6 +57,12 @@ const accountName = userInfo.value.user.name
 watchEffect(() => {
     selectedKeys.value = [router.currentRoute.value.path];
 });
+
+const menuRoutes = computed(() =>
+    router.options.routes.filter(route => route.meta?.title).map(route => ({
+        ...route,
+    }))
+);
 function handleClick(info) {
     router.push(info.key);
 }
