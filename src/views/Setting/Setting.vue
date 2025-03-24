@@ -1,6 +1,6 @@
 <template>
     <Layout>
-        <a-tabs v-model:activeKey="activeKey">
+        <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
             <a-tab-pane key="1" >
                 <template #tab>
                     <span>
@@ -82,7 +82,7 @@ import Layout from "@/components/Layout.vue";
 import {onMounted, ref} from "vue";
 import {getEnvData, getImageData, getTaskData} from "@/http/setting";
 
-const activeKey = ref('1')
+const activeKey = ref('')
 const envDataSource = ref([])
 const envColumns = [
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
@@ -137,11 +137,22 @@ const taskPagination = ref({
     hideOnSinglePage: true
 })
 
-onMounted(() => {
-    getEnvsData();
-    getImagesData();
-    getTasksData();
-})
+function tabsChange(activeKey) {
+    switch (activeKey) {
+        case '1':
+            return getEnvsData();
+        case '2':
+            return getImagesData();
+        case '3':
+            return getTasksData();
+    }
+}
+
+// onMounted(() => {
+//     getEnvsData();
+//     getImagesData();
+//     getTasksData();
+// })
 
 function getEnvsData() {
     getEnvData(envPagination.value.current, envPagination.value.pageSize)

@@ -15,8 +15,6 @@ import {
 	FileImageOutlined
 } from '@ant-design/icons-vue'
 
-import DockerOutlined from '@/components/icons/DockerOutlined.vue'
-
 
 const app = createApp(App);
 
@@ -53,6 +51,5 @@ app.component('AppstoreOutlined', AppstoreOutlined)
 app.component('HddOutlined', HddOutlined)
 app.component('EnvironmentOutlined', EnvironmentOutlined)
 app.component('FileImageOutlined', FileImageOutlined)
-app.component('DockerOutlined', DockerOutlined)
 
 app.mount('#app')

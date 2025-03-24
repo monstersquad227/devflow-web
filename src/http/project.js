@@ -17,3 +17,19 @@ export function getProjects(pageNumber, pageSize) {
 		}
 	)
 }
+
+export function getProjectsBranches(gitlabId) {
+	return request({
+		url: `${DEVFLOW}/projects/${gitlabId}/branches`,
+		method: 'GET'
+	})
+}
+
+export function saveProjects(data) {
+	return request({
+		url: `${DEVFLOW}/projects`,
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
