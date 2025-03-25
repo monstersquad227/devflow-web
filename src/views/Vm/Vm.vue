@@ -1,36 +1,33 @@
 <template>
-    <Layout>
-        <div class="table-header">
-            <a-button type="primary">
-                <template #icon>
-                    <PlusCircleOutlined />
-                </template>
-                添加</a-button>
-            <a-button type="primary" @click="refresh">
-                <template #icon>
-                    <ReloadOutlined />
-                </template>
-                刷新</a-button>
-        </div>
-        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1800}" @change="onPaginationChange" >
-            <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'action'">
-                    <span>
-                        <a>编辑</a>
-                        <a-divider type="vertical" />
-                        <a>删除</a>
-                        <a-divider type="vertical" />
-                        <a>查看密码</a>
-                    </span>
-                </template>
-                <template v-if="column.key === ''"></template>
+    <div class="table-header">
+        <a-button type="primary">
+            <template #icon>
+                <PlusCircleOutlined />
             </template>
-        </a-table>
-    </Layout>
+            添加</a-button>
+        <a-button type="primary" @click="refresh">
+            <template #icon>
+                <ReloadOutlined />
+            </template>
+            刷新</a-button>
+    </div>
+    <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1800}" @change="onPaginationChange" >
+        <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'action'">
+                <span>
+                    <a>编辑</a>
+                    <a-divider type="vertical" />
+                    <a>删除</a>
+                    <a-divider type="vertical" />
+                    <a>查看密码</a>
+                </span>
+            </template>
+            <template v-if="column.key === ''"></template>
+        </template>
+    </a-table>
 </template>
 <script setup>
 
-import Layout from "@/components/Layout.vue";
 import {onMounted, ref} from "vue";
 import { getVmData } from "@/http/vm"
 
@@ -69,13 +66,13 @@ function getData() {
         })
 }
 
-function onPaginationChange({current, pageSize}) {
+function onPaginationChange({ current }) {
     pagination.value.current = current
     getData()
 }
 
 function refresh() {
-    onPaginationChange({current: pagination.value.current, pageSize: 10})
+    onPaginationChange({ current: pagination.value.current, pageSize: 10})
 }
 </script>
 <style scoped>

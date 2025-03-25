@@ -1,17 +1,14 @@
 <template>
-    <Layout>
-        <div class="dashboard">
-            <div class="container">
-                <img src="@/assets/dashboard.png"  alt="dashboard"/>
-                <p>欢迎进入 Devflow Platform 管理系统</p>
-                <span>请点击左侧菜单开始工作吧~</span>
-            </div>
+    <div class="dashboard">
+        <div class="container">
+            <img src="@/assets/dashboard.png"  alt="dashboard"/>
+            <p>欢迎进入 Devflow Platform 管理系统</p>
+            <span>请点击左侧菜单开始工作吧~</span>
         </div>
-    </Layout>
+    </div>
 </template>
 
 <script setup>
-import Layout from "@/components/Layout.vue";
 </script>
 
 <style>

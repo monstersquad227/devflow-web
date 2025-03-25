@@ -1,49 +1,47 @@
 <template>
-    <Layout>
-        <div class="table-header">
-            <a-button type="primary" @click="showSaveModal">
-                <template #icon>
-                    <PlusCircleOutlined />
-                </template>
-                添加项目</a-button>
-<!--            <a-input-search style="width: 200px"/>-->
-            <a-button type="primary" @click="refresh">
-                <template #icon>
-                    <ReloadOutlined />
-                </template>刷新</a-button>
-        </div>
-
-        <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1000 }" @change="onPaginationChange" >
-            <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'build'">
-                    <a-button type="link" @click="showBuildModal(record)">build</a-button>
-                </template>
-                <template v-if="column.key === 'deploy'">
-                    <a-button type="link">deploy</a-button>
-                </template>
-                <template v-if="column.key === 'action'">
-                    <span>
-                        <a>编辑</a>
-                        <a-divider type="vertical" />
-                        <a>删除</a>
-                        <a-divider type="vertical" />
-                        <a>详情</a>
-                    </span>
-                </template>
+    <div class="table-header">
+        <a-button type="primary" @click="showSaveModal">
+            <template #icon>
+                <PlusCircleOutlined />
             </template>
-        </a-table>
+            添加项目</a-button>
+<!--           <a-input-search style="width: 200px"/>-->
+        <a-button type="primary" @click="refresh">
+            <template #icon>
+                <ReloadOutlined />
+            </template>刷新</a-button>
+    </div>
+    <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1000 }" @change="onPaginationChange" >
+        <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'build'">
+                <a-button type="link" @click="showBuildModal(record)">build</a-button>
+            </template>
+            <template v-if="column.key === 'deploy'">
+                <a-button type="link" @click="showDeployModal(record)">deploy</a-button>
+            </template>
+            <template v-if="column.key === 'action'">
+                <span>
+                    <a>编辑</a>
+                    <a-divider type="vertical" />
+                    <a>删除</a>
+                    <a-divider type="vertical" />
+                    <a>详情</a>
+                </span>
+            </template>
+        </template>
+    </a-table>
 
-        <SaveModal ref="projectSaveModal" />
-        <BuildModal ref="projectBuildModal" :project="projectBuildRecord" />
-    </Layout>
+    <SaveModal ref="projectSaveModal" />
+    <BuildModal ref="projectBuildModal" :project="projectBuildRecord" />
+    <DeployModal ref="projectDeployModal" :project="projectDeployRecord"/>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import { getProjects } from "@/http/project";
-import Layout from "@/components/Layout.vue";
 import SaveModal from "./components/SaveModal.vue";
 import BuildModal from "./components/BuildModal.vue"
+import DeployModal from "@/views/Project/components/DeployModal.vue";
 
 
 const dataSource = ref([]);
@@ -62,8 +60,10 @@ const pagination= ref({
     total: 0
 });
 const projectSaveModal = ref(false);
-const projectBuildModal = ref(false)
-const projectBuildRecord = ref(null)
+const projectBuildModal = ref(false);
+const projectDeployModal = ref(false);
+const projectBuildRecord = ref(null);
+const projectDeployRecord = ref(null)
 
 
 onMounted(() => {
@@ -77,7 +77,7 @@ function getProject() {
             pagination.value.total = total
         })
 }
-function onPaginationChange({ current, pageSize }) {
+function onPaginationChange({ current }) {
     pagination.value.current = current
     getProject()
 }
@@ -90,6 +90,10 @@ function showSaveModal() {
 function showBuildModal(record) {
     projectBuildRecord.value = record;
     projectBuildModal.value.visible = true;
+}
+function showDeployModal(record) {
+    projectDeployRecord.value = record
+    projectDeployModal.value.visible = true;
 }
 </script>
 

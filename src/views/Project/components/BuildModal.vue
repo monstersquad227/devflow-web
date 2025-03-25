@@ -5,7 +5,7 @@
                 <a-row>
                     <a-col :span="12">
                         <a-form-item label="项目名" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-input v-model:value="formState.gitlab_name" placeholder="项目名" disabled />
+                            <a-input v-model:value="formState.gitlab_name" disabled />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
@@ -16,7 +16,7 @@
                 </a-row>
 
                 <a-form-item label="仓库地址">
-                    <a-input v-model:value="formState.gitlab_repo" placeholder="应用名" disabled />
+                    <a-input v-model:value="formState.gitlab_repo" disabled />
                 </a-form-item>
 
                 <a-row>
@@ -27,31 +27,36 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item label="作者" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-input v-model:value="formState.author" placeholder="项目名" disabled />
+                            <a-input v-model:value="formState.author" disabled />
                         </a-form-item>
                     </a-col>
                 </a-row>
 
                 <a-form-item label="版本信息">
-                    <a-input v-model:value="formState.message" />
+                    <a-input v-model:value="formState.message" disabled />
+                </a-form-item>
+                <a-form-item label="编译指令">
+                    <a-input v-model:value="formState.command" />
                 </a-form-item>
                 <a-form-item label="项目路径">
-                    <a-input v-model:value="formState.project_build_path" />
+                    <a-input v-model:value="formState.project_build_path" disabled />
                 </a-form-item>
                 <a-form-item label="项目包名">
-                    <a-input v-model:value="formState.project_package_name" />
+                    <a-input v-model:value="formState.project_package_name" disabled />
                 </a-form-item>
-                <!-- 添加其他字段，视需要而定 -->
+                <a-form-item label="备注信息">
+                    <a-textarea v-model:value="formState.description" />
+                </a-form-item>
             </a-form>
         </a-modal>
     </a-config-provider>
 </template>
 
 <script setup>
-import {ref, defineProps, watch, watchEffect} from "vue";
+import {ref, defineProps, watchEffect} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {getEnvData} from "@/http/setting";
-import {getProjectsBranches} from "@/http/project";
+import {getProjectsBranches, getProjectsBranchesDetails} from "@/http/project";
 
 // 从父组件传递过来的数据
 const props = defineProps({
@@ -65,8 +70,10 @@ const formState = ref({
     branch: '',
     author: '',
     message: '',
+    command: '',
     project_build_path: '',
-    project_package_name: ''
+    project_package_name: '',
+    description: ''
 });
 const envOptions = ref([]);
 const branchesOptions = ref([]);
@@ -86,8 +93,10 @@ watchEffect(() => {
             branch: '',
             author: '',
             message: '',
+            command: '',
             project_build_path: '',
-            project_package_name: ''
+            project_package_name: '',
+            description: ''
         };
         envOptions.value = [];
         branchesOptions.value = [];
@@ -112,6 +121,7 @@ watchEffect(() => {
         formState.value.gitlab_name = props.project.gitlab_name;
         formState.value.deployment_name = props.project.deployment_name;
         formState.value.gitlab_repo = props.project.gitlab_repo;
+        formState.value.description = props.project.description;
     }
 });
 
@@ -125,6 +135,11 @@ const handleCancel = () => {
 };
 
 function branchChange() {
+    getProjectsBranchesDetails(props.project.gitlab_id, formState.value.branch)
+        .then((res) => {
+            formState.value.author = res.commit["author_name"];
+            formState.value.message = res.commit.message;
+        })
     console.log(formState.value.branch)
 }
 

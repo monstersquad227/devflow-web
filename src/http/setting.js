@@ -9,8 +9,13 @@ export function getEnvData(pageNumber, pageSize) {
 			"pageSize": pageSize
 		},
 		method: 'GET'
-	},{
-		successMessageText: '操作成功'
+	})
+}
+
+export function getNamespacesByEnv(env) {
+	return request({
+		url: `${DEVFLOW}/setting/envs/${env}/namespaces`,
+		method: 'GET'
 	})
 }
 

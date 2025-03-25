@@ -16,3 +16,10 @@ export function getVmData(pageNumber, pageSize) {
 		}
 	)
 }
+
+export function getVmByApplication(application) {
+	return request({
+		url: `${DEVFLOW}/vms/${application}`,
+		method: 'GET'
+	})
+}

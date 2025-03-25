@@ -28,7 +28,7 @@
 <script setup>
 import {ref, watchEffect} from "vue";
 import { getTaskData } from "@/http/setting"
-import { saveProjects, getProjects } from "@/http/project"
+import { saveProjects } from "@/http/project"
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 
 const visible = ref(false);

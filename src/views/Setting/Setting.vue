@@ -1,86 +1,82 @@
 <template>
-    <Layout>
-        <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
-            <a-tab-pane key="1" >
-                <template #tab>
-                    <span>
-                        <EnvironmentOutlined />
-                        环境
-                    </span>
-                </template>
-                <div class="table-header">
-                    <a-button type="primary">添加</a-button>
-                    <a-button type="primary" @click="envRefresh">刷新</a-button>
-                </div>
-                <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 1500 }" :pagination="envPagination" @change="envOnPaginationChange" >
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'action'">
-                            <span>
-                                <a>编辑</a>
-                                <a-divider type="vertical" />
-                                <a>删除</a>
-                                </span>
-                        </template>
+    <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
+        <a-tab-pane key="1" >
+            <template #tab>
+                <span>
+                    <EnvironmentOutlined />
+                    环境
+                </span>
+            </template>
+            <div class="table-header">
+                <a-button type="primary">添加</a-button>
+                <a-button type="primary" @click="envRefresh">刷新</a-button>
+            </div>
+            <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 1500 }" :pagination="envPagination" @change="envOnPaginationChange" >
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'action'">
+                        <span>
+                            <a>编辑</a>
+                            <a-divider type="vertical" />
+                            <a>删除</a>
+                        </span>
                     </template>
-                </a-table>
-            </a-tab-pane>
-            <a-tab-pane key="2" >
-                <template #tab>
-                    <span>
-                        <EnvironmentOutlined />
-<!--                            <docker-outlined :style="{ color: '#2396ef', fontSize: '24px' }" />-->
-                        镜像
-                    </span>
                 </template>
-                <div class="table-header">
-                    <a-button type="primary">添加</a-button>
-                    <a-button type="primary" @click="imageRefresh">刷新</a-button>
-                </div>
-                <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 1500 }" :pagination="imagePagination" @change="imageOnPaginationChange" >
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'action'">
-                            <span>
-                                <a>编辑</a>
-                                <a-divider type="vertical" />
-                                <a>删除</a>
-                                </span>
-                        </template>
+            </a-table>
+        </a-tab-pane>
+        <a-tab-pane key="2" >
+            <template #tab>
+                <span>
+                    <EnvironmentOutlined />
+<!--                    <docker-outlined :style="{ color: '#2396ef', fontSize: '24px' }" />-->
+                    镜像
+                </span>
+            </template>
+            <div class="table-header">
+                <a-button type="primary">添加</a-button>
+                <a-button type="primary" @click="imageRefresh">刷新</a-button>
+            </div>
+            <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 1500 }" :pagination="imagePagination" @change="imageOnPaginationChange" >
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'action'">
+                        <span>
+                            <a>编辑</a>
+                            <a-divider type="vertical" />
+                            <a>删除</a>
+                        </span>
                     </template>
-                </a-table>
-            </a-tab-pane>
-            <a-tab-pane key="3" >
-                <template #tab>
-                    <span>
-                        <EnvironmentOutlined />
-                         任务
-                    </span>
                 </template>
-                <div class="table-header">
-                    <a-button type="primary">添加</a-button>
-                    <a-button type="primary" @click="taskRefresh">刷新</a-button>
-                </div>
-                <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'action'">
-                            <span>
-                                <a>编辑</a>
-                                <a-divider type="vertical" />
-                                <a>删除</a>
-                                </span>
-                        </template>
+            </a-table>
+        </a-tab-pane>
+        <a-tab-pane key="3" >
+            <template #tab>
+                <span>
+                    <EnvironmentOutlined />
+                    任务
+                </span>
+            </template>
+            <div class="table-header">
+                <a-button type="primary">添加</a-button>
+                <a-button type="primary" @click="taskRefresh">刷新</a-button>
+            </div>
+            <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'action'">
+                        <span>
+                            <a>编辑</a>
+                            <a-divider type="vertical" />
+                            <a>删除</a>
+                        </span>
                     </template>
-                </a-table>
-            </a-tab-pane>
-        </a-tabs>
-    </Layout>
-
+                </template>
+            </a-table>
+        </a-tab-pane>
+    </a-tabs>
 </template>
 
 <script setup>
 
-import Layout from "@/components/Layout.vue";
-import {onMounted, ref} from "vue";
-import {getEnvData, getImageData, getTaskData} from "@/http/setting";
+import { ref } from "vue";
+import { getEnvData, getImageData, getTaskData } from "@/http/setting";
 
 const activeKey = ref('')
 const envDataSource = ref([])
@@ -162,7 +158,7 @@ function getEnvsData() {
             envPagination.value.total = total || 0
         })
 }
-function envOnPaginationChange({current, pageSize}) {
+function envOnPaginationChange({current}) {
     envPagination.value.current = current
     getEnvsData()
 }
@@ -178,7 +174,7 @@ function getImagesData() {
             imagePagination.value.total = total
         })
 }
-function imageOnPaginationChange({current, pageSize}) {
+function imageOnPaginationChange({ current }) {
     imagePagination.value.current = current
     getImagesData()
 }
@@ -194,7 +190,7 @@ function getTasksData() {
             taskPagination.value.total = total
         })
 }
-function taskOnPaginationChange({current, pageSize}) {
+function taskOnPaginationChange({ current }) {
     taskPagination.value.current = current
     getTasksData()
 }

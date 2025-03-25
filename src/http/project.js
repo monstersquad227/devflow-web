@@ -25,6 +25,20 @@ export function getProjectsBranches(gitlabId) {
 	})
 }
 
+export function getProjectsBranchesDetails(gitlabId, branch) {
+	return request({
+		url: `${DEVFLOW}/projects/${gitlabId}/branches/${branch}/details`,
+		method: 'GET'
+	})
+}
+
+export function getProjectTags(projectName, env) {
+	return request({
+		url: `${DEVFLOW}/projects/${projectName}/${env}/tags`,
+		method: 'GET'
+	})
+}
+
 export function saveProjects(data) {
 	return request({
 		url: `${DEVFLOW}/projects`,
