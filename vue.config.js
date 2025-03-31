@@ -5,7 +5,7 @@ module.exports = defineConfig({
         proxy: {
             '^/devflow': {
                 // target: 'http://192.168.1.87:8080',
-                target: 'http://10.11.11.47:8080',
+                target: 'http://10.11.11.56:8080',
                 changeOrigin: true,
             }
         },

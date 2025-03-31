@@ -1,5 +1,6 @@
 <template>
-    <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
+    <Layout>
+        <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
         <a-tab-pane key="1" >
             <template #tab>
                 <span>
@@ -27,7 +28,6 @@
             <template #tab>
                 <span>
                     <EnvironmentOutlined />
-<!--                    <docker-outlined :style="{ color: '#2396ef', fontSize: '24px' }" />-->
                     镜像
                 </span>
             </template>
@@ -71,12 +71,14 @@
             </a-table>
         </a-tab-pane>
     </a-tabs>
+    </Layout>
 </template>
 
 <script setup>
 
 import { ref } from "vue";
 import { getEnvData, getImageData, getTaskData } from "@/http/setting";
+import Layout from "@/components/Layout.vue";
 
 const activeKey = ref('')
 const envDataSource = ref([])

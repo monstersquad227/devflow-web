@@ -1,5 +1,6 @@
 <template>
-    <div class="table-header">
+    <Layout>
+        <div class="table-header">
         <a-button type="primary">
             <template #icon>
                 <PlusCircleOutlined />
@@ -11,25 +12,27 @@
             </template>
             刷新</a-button>
     </div>
-    <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1800}" @change="onPaginationChange" >
-        <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'action'">
-                <span>
-                    <a>编辑</a>
-                    <a-divider type="vertical" />
-                    <a>删除</a>
-                    <a-divider type="vertical" />
-                    <a>查看密码</a>
-                </span>
+        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1800}" @change="onPaginationChange" >
+            <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'action'">
+                    <span>
+                        <a>编辑</a>
+                        <a-divider type="vertical" />
+                        <a>删除</a>
+                        <a-divider type="vertical" />
+                        <a>查看密码</a>
+                    </span>
+                </template>
+                <template v-if="column.key === ''"></template>
             </template>
-            <template v-if="column.key === ''"></template>
-        </template>
     </a-table>
+    </Layout>
 </template>
 <script setup>
 
 import {onMounted, ref} from "vue";
 import { getVmData } from "@/http/vm"
+import Layout from "@/components/Layout.vue";
 
 const pagination = ref({
     current: 1,
