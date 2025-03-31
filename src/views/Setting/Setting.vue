@@ -119,6 +119,7 @@ const taskDataSource = ref([])
 const taskColumns = [
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
     { title: '名称', align: 'center', dataIndex: 'name', key: 'name', width: 200 },
+    { title: '镜像ID', align: 'center', dataIndex: 'image_id', key: 'image_id', width: 100 },
     { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150 },
     { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },

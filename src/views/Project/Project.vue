@@ -49,7 +49,7 @@ const columns = [
     { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
     { title: "项目名", align: "center", dataIndex: "gitlab_name", key: "gitlab_name", width: 200 },
     { title: "应用名", align: "center", dataIndex: "deployment_name", key: "deployment_name", width: 200 },
-    { title: "任务模版", align: "center", dataIndex: "build_template_id", key: "build_template_id", width: 150 },
+    { title: "任务模版", align: "center", dataIndex: "task_id", key: "task_id", width: 150 },
     { title: "构建", align: "center", key: "build", width: 100 },
     { title: "发布", align: "center", key: "deploy", width: 100 },
     { title: "操作", align: "center", key: "action", fixed: 'right', width: 180 },

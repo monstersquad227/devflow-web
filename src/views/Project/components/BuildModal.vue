@@ -56,19 +56,22 @@
 import {ref, defineProps, watchEffect} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {getEnvData} from "@/http/setting";
-import {getProjectsBranches, getProjectsBranchesDetails} from "@/http/project";
+import {buildProjects, getProjectsBranches, getProjectsBranchesDetails} from "@/http/project";
 
 // 从父组件传递过来的数据
 const props = defineProps({
     project: Object,  // 接收 project 对象
 });
 const formState = ref({
+    id: '',
     gitlab_name: '',
     deployment_name: '',
     env: '',
     gitlab_repo: '',
+    task_id: '',
     branch: '',
     author: '',
+    short_id: '',
     message: '',
     command: '',
     project_build_path: '',
@@ -122,11 +125,28 @@ watchEffect(() => {
         formState.value.deployment_name = props.project.deployment_name;
         formState.value.gitlab_repo = props.project.gitlab_repo;
         formState.value.description = props.project.description;
+        formState.value.task_id = props.project.task_id;
+        formState.value.id = props.project.id;
     }
 });
 
 const handleOk = () => {
-    console.log("提交的构建数据：", props.project);
+    const data = {
+        gitlab_name: formState.value.gitlab_name,
+        deployment_name: formState.value.deployment_name,
+        task_id: formState.value.task_id.toString(),
+        branch: formState.value.branch,
+        gitlab_repo: formState.value.gitlab_repo,
+        environment_unique: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
+        harbor_url: "harbor.chengduoduo.com",
+        short_id: formState.value.short_id,
+        command: formState.value.command
+    }
+    buildProjects(data, formState.value.id)
+        .then((res) => {
+            console.log('res: ', res)
+        })
+    console.log("提交的构建数据：", data);
     visible.value = false;
 };
 
@@ -139,6 +159,7 @@ function branchChange() {
         .then((res) => {
             formState.value.author = res.commit["author_name"];
             formState.value.message = res.commit.message;
+            formState.value.short_id = res.commit.short_id;
         })
     console.log(formState.value.branch)
 }

@@ -9,7 +9,7 @@
                     <a-input v-model:value="formState.deployment_name" placeholder="请输入应用名" />
                 </a-form-item>
                 <a-form-item label="任务模版">
-                    <a-select v-model:value="formState.build_template_id" :options="templateOptions" placeholder="请选择任务模版" />
+                    <a-select v-model:value="formState.task_id" :options="taskOptions" placeholder="请选择任务模版" />
                 </a-form-item>
                 <a-form-item label="项目路径">
                     <a-input v-model:value="formState.project_build_path" placeholder="请输入项目构建路径" />
@@ -35,12 +35,12 @@ const visible = ref(false);
 const formState = ref({
     gitlab_name: "",
     deployment_name: "",
-    build_template_id: null, // 绑定任务模版
+    task_id: null, // 绑定任务模版
     project_build_path: "",
     project_package_name: "",
     description: "",
 });
-const templateOptions = ref([]);
+const taskOptions = ref([]);
 const handleOk = () => {
     console.log("提交的表单数据：", formState.value);
     saveProjects(formState.value)
@@ -60,7 +60,7 @@ function getTemplateData() {
     getTaskData(1, 100)
         .then((res) => {
             const { data } = res
-            templateOptions.value = data.map(item => ({
+            taskOptions.value = data.map(item => ({
                 label: item.name,
                 value: item.id,
             }))
