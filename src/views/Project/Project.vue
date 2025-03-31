@@ -24,7 +24,7 @@
                     <span>
                         <a>编辑</a>
                         <a-divider type="vertical" />
-                        <a>删除</a>
+                        <a @click="showDeleteProjectModal(record)">删除</a>
                         <a-divider type="vertical" />
                         <a>详情</a>
                     </span>
@@ -40,11 +40,13 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { getProjects } from "@/http/project";
+import {delProjects, getProjects} from "@/http/project";
 import SaveModal from "./components/SaveModal.vue";
 import BuildModal from "./components/BuildModal.vue"
 import DeployModal from "@/views/Project/components/DeployModal.vue";
 import Layout from "@/components/Layout.vue";
+import {Modal} from "ant-design-vue";
+import {delVmData} from "@/http/vm";
 
 
 const dataSource = ref([]);
@@ -67,6 +69,15 @@ const projectBuildModal = ref(false);
 const projectDeployModal = ref(false);
 const projectBuildRecord = ref(null);
 const projectDeployRecord = ref(null)
+
+const showDeleteProjectModal = (record) => {
+    Modal.confirm({
+        title: record.gitlab_name+' 确定删除该项目吗？',
+        onOk() {
+            delProjects(record.id)
+        },
+    })
+}
 
 
 onMounted(() => {

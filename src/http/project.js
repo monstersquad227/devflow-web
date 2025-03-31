@@ -56,3 +56,13 @@ export function buildProjects(data, projectId) {
 		successMessageText: '操作成功'
 	})
 }
+
+
+export function delProjects(id) {
+	return request({
+		url: `${DEVFLOW}/projects/${id}`,
+		method: 'DELETE'
+	}, {
+		successMessageText: '操作成功'
+	})
+}

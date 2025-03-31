@@ -16,11 +16,11 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a>编辑</a>
+                        <a @click="showUpdateModal(record)">编辑</a>
                         <a-divider type="vertical" />
-                        <a @click="deleteVmModal(record)">删除</a>
+                        <a @click="showDeleteVmModal(record)">删除</a>
                         <a-divider type="vertical" />
-                        <a @click="getPasswordModal(record)">查看密码</a>
+                        <a @click="showPasswordModal(record)">查看密码</a>
                     </span>
                 </template>
                 <template v-if="column.key === ''"></template>
@@ -28,6 +28,7 @@
         </a-table>
 
         <SaveModal ref="vmSaveModal"/>
+        <UpdateModal ref="vmUpdateModal" :vm="vmUpdateRecord"/>
     </Layout>
 </template>
 <script setup>
@@ -40,6 +41,7 @@ import {Modal} from "ant-design-vue";
 import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
 import {pem as base64} from "node-forge";
 import {Base64} from "js-base64";
+import UpdateModal from "@/views/Vm/components/UpdateModal.vue";
 
 const pagination = ref({
     current: 1,
@@ -63,8 +65,10 @@ const columns = [
     { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
 ]
 const vmSaveModal = ref(false)
+const vmUpdateModal = ref(false)
+const vmUpdateRecord = ref(null)
 
-const deleteVmModal = (record) => {
+const showDeleteVmModal = (record) => {
     Modal.confirm({
         title: record.instance_id+' 确定删除吗?',
         onOk() {
@@ -74,7 +78,7 @@ const deleteVmModal = (record) => {
     })
 };
 
-const getPasswordModal = async (record) => {
+const showPasswordModal = async (record) => {
     const password = ref('')
     try {
         const res = await getVmPasswordData(record.id);
@@ -88,6 +92,11 @@ const getPasswordModal = async (record) => {
         content: password.value,
     })
 };
+
+const showUpdateModal = (record) => {
+    vmUpdateRecord.value = record;
+    vmUpdateModal.value.visible = true;
+}
 
 onMounted(() => {
     getData()

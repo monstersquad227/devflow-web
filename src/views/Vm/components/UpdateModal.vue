@@ -1,36 +1,33 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="添加机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" @cancel="handleCancel" >
+        <a-modal v-model:open="visible" title="更新机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" @cancel="handleCancel" >
             <a-form :model="formState" layout="horizontal" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-form-item label="实例ID">
-                    <a-input v-model:value="formState.instance_id" placeholder="请输入项目ID" />
+                    <a-input v-model:value="formState.instance_id" disabled />
                 </a-form-item>
                 <a-form-item label="实例名称">
-                    <a-input v-model:value="formState.instance_name" placeholder="请输入实例名称" />
-                </a-form-item>
-                <a-form-item label="实例密码">
-                    <a-input v-model:value="formState.password" placeholder="请输入实例密码" />
+                    <a-input v-model:value="formState.instance_name" />
                 </a-form-item>
                 <a-form-item label="内网IP">
-                    <a-input v-model:value="formState.private_ip" placeholder="请输入内网IP" />
+                    <a-input v-model:value="formState.private_ip" />
                 </a-form-item>
                 <a-form-item label="公网IP">
-                    <a-input v-model:value="formState.public_ip" placeholder="请输入公网IP" />
+                    <a-input v-model:value="formState.public_ip" />
                 </a-form-item>
                 <a-form-item label="配置">
-                    <a-select v-model:value="formState.spec" placeholder="请选择配置" :options="specOptions" />
+                    <a-select v-model:value="formState.spec" :options="specOptions"/>
                 </a-form-item>
                 <a-form-item label="所属项目">
-                    <a-input v-model:value="formState.application" placeholder="请输入所属项目" />
+                    <a-input v-model:value="formState.application" />
                 </a-form-item>
                 <a-form-item label="地区">
-                    <a-select v-model:value="formState.region" placeholder="请输入实例所在地区" :options="regionOptions" />
+                    <a-select v-model:value="formState.region" :options="regionOptions"/>
                 </a-form-item>
                 <a-form-item label="平台">
-                    <a-select v-model:value="formState.cloud_provider" placeholder="请输入机器所属平台" :options="cloudProviderOptions" />
+                    <a-select v-model:value="formState.cloud_provider" :options="cloudProviderOptions"/>
                 </a-form-item>
                 <a-form-item label="系统">
-                    <a-select v-model:value="formState.os" placeholder="请输入机器系统" :options="osOptions" />
+                    <a-select v-model:value="formState.os" :options="osOptions"/>
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -40,15 +37,11 @@
 <script setup>
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {ref, watchEffect} from "vue";
-import {Base64} from "js-base64";
-import {postSaveVmData} from "@/http/vm";
+import {defineProps, ref, watchEffect} from "vue";
 
-const visible = ref(false);
 const formState = ref({
     instance_id: '',
     instance_name: '',
-    password: '',
     private_ip: '',
     public_ip: '',
     spec: '',
@@ -56,7 +49,8 @@ const formState = ref({
     region: '',
     cloud_provider: '',
     os: ''
-});
+})
+const visible = ref(false);
 const specOptions = ref([
     { label: '1C2G', value: 'small' },
     { label: '2C4G', value: 'medium' },
@@ -74,42 +68,43 @@ const cloudProviderOptions = ref([
     { label: '华为云', value: 'huawei' },
     { label: '腾讯', value: 'tencent' },
     { label: 'AWS', value: 'aws' },
-    { label: '机房', value: 'local' },
+    { label: '机房', value: 'local' }
 ]);
 const osOptions = ref([
     { label: 'Centos', value: 'centos' },
+    { label: 'Windows', value: 'win' },
     { label: 'Ubuntu', value: 'ubuntu' },
     { label: 'Debian', value: 'debian' }
 ])
-
-watchEffect(() => {
-    if (visible.value === true) {
-        formState.value = {
-            instance_id: '',
-            instance_name: '',
-            password: '',
-            private_ip: '',
-            public_ip: '',
-            spec: '',
-            application: '',
-            region: '',
-            cloud_provider: '',
-            os: ''
-        }
-    }
-})
-
+const props = defineProps({
+    vm: Object,
+});
 const handleOk = () => {
-    formState.value.password = Base64.encode(formState.value.password);
-    postSaveVmData(formState.value)
+    console.log("提交的构建数据：", formState.value);
     visible.value = false;
 };
 const handleCancel = () => {
     visible.value = false;
 };
 
+watchEffect(() => {
+    if (props.vm && visible.value === true) {
+        formState.value.instance_id = props.vm.instance_id;
+        formState.value.instance_name = props.vm.instance_name;
+        formState.value.private_ip = props.vm.private_ip;
+        formState.value.public_ip = props.vm.public_ip;
+        formState.value.spec = props.vm.spec;
+        formState.value.region = props.vm.region;
+        formState.value.cloud_provider = props.vm.cloud_provider;
+        formState.value.os = props.vm.os;
+    }
+})
+
 defineExpose({
     visible,
 });
-
 </script>
+
+<style scoped>
+
+</style>
