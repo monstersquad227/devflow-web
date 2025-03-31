@@ -35,6 +35,13 @@ export function delVmData(id) {
 	})
 }
 
+export function getVmPasswordData(id) {
+	return request({
+		url: `${DEVFLOW}/vms/${id}/password`,
+		method: 'GET'
+	})
+}
+
 export function getVmByApplication(application) {
 	return request({
 		url: `${DEVFLOW}/vms/${application}`,

@@ -18,9 +18,9 @@
                     <span>
                         <a>编辑</a>
                         <a-divider type="vertical" />
-                        <a @click="deleteModal(record)">删除</a>
+                        <a @click="deleteVmModal(record)">删除</a>
                         <a-divider type="vertical" />
-                        <a>查看密码</a>
+                        <a @click="getPasswordModal(record)">查看密码</a>
                     </span>
                 </template>
                 <template v-if="column.key === ''"></template>
@@ -33,11 +33,13 @@
 <script setup>
 
 import {createVNode, onMounted, ref} from "vue";
-import {delVmData, getVmData} from "@/http/vm"
+import {delVmData, getVmData, getVmPasswordData} from "@/http/vm"
 import Layout from "@/components/Layout.vue";
 import SaveModal from "@/views/Vm/components/SaveModal.vue";
 import {Modal} from "ant-design-vue";
 import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
+import {pem as base64} from "node-forge";
+import {Base64} from "js-base64";
 
 const pagination = ref({
     current: 1,
@@ -62,7 +64,7 @@ const columns = [
 ]
 const vmSaveModal = ref(false)
 
-const deleteModal = (record) => {
+const deleteVmModal = (record) => {
     Modal.confirm({
         title: record.instance_id+' 确定删除吗?',
         onOk() {
@@ -70,7 +72,22 @@ const deleteModal = (record) => {
             console.log('OK');
         },
     })
-}
+};
+
+const getPasswordModal = async (record) => {
+    const password = ref('')
+    try {
+        const res = await getVmPasswordData(record.id);
+        password.value = Base64.decode(res);
+    } catch (error) {
+        password.value = '123456';
+    }
+
+    Modal.success({
+        title: record.instance_id,
+        content: password.value,
+    })
+};
 
 onMounted(() => {
     getData()
