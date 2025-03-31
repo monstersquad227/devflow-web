@@ -18,7 +18,7 @@
                     <span>
                         <a>编辑</a>
                         <a-divider type="vertical" />
-                        <a>删除</a>
+                        <a @click="deleteModal(record)">删除</a>
                         <a-divider type="vertical" />
                         <a>查看密码</a>
                     </span>
@@ -32,10 +32,12 @@
 </template>
 <script setup>
 
-import {onMounted, ref} from "vue";
-import { getVmData } from "@/http/vm"
+import {createVNode, onMounted, ref} from "vue";
+import {delVmData, getVmData} from "@/http/vm"
 import Layout from "@/components/Layout.vue";
 import SaveModal from "@/views/Vm/components/SaveModal.vue";
+import {Modal} from "ant-design-vue";
+import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
 
 const pagination = ref({
     current: 1,
@@ -59,6 +61,16 @@ const columns = [
     { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
 ]
 const vmSaveModal = ref(false)
+
+const deleteModal = (record) => {
+    Modal.confirm({
+        title: record.instance_id+' 确定删除吗?',
+        onOk() {
+            delVmData(record.id)
+            console.log('OK');
+        },
+    })
+}
 
 onMounted(() => {
     getData()

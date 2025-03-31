@@ -26,6 +26,15 @@ export function postSaveVmData(data) {
 	})
 }
 
+export function delVmData(id) {
+	return request({
+		url: `${DEVFLOW}/vms/${id}`,
+		method: 'DELETE'
+	},{
+		successMessageText: '操作成功'
+	})
+}
+
 export function getVmByApplication(application) {
 	return request({
 		url: `${DEVFLOW}/vms/${application}`,
