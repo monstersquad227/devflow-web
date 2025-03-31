@@ -4,8 +4,7 @@
             <a-button type="primary" @click="showSaveModal">
                 <template #icon>
                     <PlusCircleOutlined />
-                </template>
-                添加项目</a-button>
+                </template>添加</a-button>
 <!--               <a-input-search style="width: 200px"/>-->
             <a-button type="primary" @click="refresh">
                 <template #icon>
