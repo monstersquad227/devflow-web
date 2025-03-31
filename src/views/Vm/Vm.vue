@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="table-header">
-        <a-button type="primary">
+        <a-button type="primary" @click="showSaveModal">
             <template #icon>
                 <PlusCircleOutlined />
             </template>
@@ -25,7 +25,9 @@
                 </template>
                 <template v-if="column.key === ''"></template>
             </template>
-    </a-table>
+        </a-table>
+
+        <SaveModal ref="vmSaveModal"/>
     </Layout>
 </template>
 <script setup>
@@ -33,6 +35,7 @@
 import {onMounted, ref} from "vue";
 import { getVmData } from "@/http/vm"
 import Layout from "@/components/Layout.vue";
+import SaveModal from "@/views/Vm/components/SaveModal.vue";
 
 const pagination = ref({
     current: 1,
@@ -47,7 +50,7 @@ const columns = [
     { title: '实例名称', align: 'center', dataIndex: 'instance_name', key: 'instance_name', width: 180 },
     { title: '内网IP', align: 'center', dataIndex: 'private_ip', key: 'private_ip', width: 180 },
     { title: '公网IP', align: 'center', dataIndex: 'public_ip', key: 'public_ip', width: 180 },
-    { title: '配置', align: 'center', dataIndex: 'spec', key: 'spec', width: 80 },
+    { title: '配置', align: 'center', dataIndex: 'spec', key: 'spec', width: 120 },
     { title: '地区', align: 'center', dataIndex: 'region', key: 'region', width: 180 },
     { title: '平台', align: 'center', dataIndex: 'cloud_provider', key: 'cloud_provider', width: 80 },
     { title: '系统', align: 'center', dataIndex: 'os', key: 'os', width: 100 },
@@ -55,6 +58,7 @@ const columns = [
     { title: '修改时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
     { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
 ]
+const vmSaveModal = ref(false)
 
 onMounted(() => {
     getData()
@@ -72,6 +76,10 @@ function getData() {
 function onPaginationChange({ current }) {
     pagination.value.current = current
     getData()
+}
+
+function showSaveModal() {
+    vmSaveModal.value.visible = true
 }
 
 function refresh() {

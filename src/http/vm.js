@@ -17,6 +17,15 @@ export function getVmData(pageNumber, pageSize) {
 	)
 }
 
+export function postSaveVmData(data) {
+	return request({
+		url: `${DEVFLOW}/vms`,
+		data
+	},{
+		successMessageText: '操作成功'
+	})
+}
+
 export function getVmByApplication(application) {
 	return request({
 		url: `${DEVFLOW}/vms/${application}`,
