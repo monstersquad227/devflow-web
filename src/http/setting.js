@@ -96,3 +96,31 @@ export function getTaskData(pageNumber, pageSize) {
 		method: 'GET'
 	})
 }
+
+export function postSaveTask(data) {
+	return request({
+		url: `${DEVFLOW}/setting/tasks`,
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function updateTask(id, data) {
+	return request({
+		url: `${DEVFLOW}/setting/tasks/${id}`,
+		data,
+		method: 'PUT'
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function deleteTask(id) {
+	return request({
+		url: `${DEVFLOW}/setting/tasks/${id}`,
+		method: 'DELETE'
+	}, {
+		successMessageText: '操作成功'
+	})
+}

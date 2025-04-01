@@ -55,16 +55,16 @@
                     </span>
                 </template>
                 <div class="table-header">
-                    <a-button type="primary"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button type="primary" @click="showTaskSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="taskRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
                 <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
-                                <a>编辑</a>
+                                <a @click="showTaskUpdateModal(record)">编辑</a>
                                 <a-divider type="vertical" />
-                                <a>删除</a>
+                                <a @click="showTaskDeleteModal(record)">删除</a>
                             </span>
                         </template>
                     </template>
@@ -75,19 +75,23 @@
         <EnvUpdateModal ref="envUpdateModal" :env="envUpdateRecord" />
         <ImageSaveModal ref="imageSaveModal" />
         <ImageUpdateModal ref="imageUpdateModal" :image="imageUpdateRecord" />
+        <TaskSaveModal ref="taskSaveModal" />
+        <TaskUpdateModal ref="taskUpdateModal" :task="taskUpdateRecord" />
     </Layout>
 </template>
 
 <script setup>
 
 import { ref } from "vue";
-import { deleteEnv, deleteImage, getEnvData, getImageData, getTaskData } from "@/http/setting";
+import {deleteEnv, deleteImage, deleteTask, getEnvData, getImageData, getTaskData} from "@/http/setting";
 import Layout from "@/components/Layout.vue";
 import EnvSaveModal from "@/views/Setting/components/EnvSaveModal.vue";
 import { message, Modal } from "ant-design-vue";
 import EnvUpdateModal from "@/views/Setting/components/EnvUpdateModal.vue";
 import ImageSaveModal from "@/views/Setting/components/ImageSaveModal.vue";
 import ImageUpdateModal from "@/views/Setting/components/ImageUpdateModal.vue";
+import TaskSaveModal from "@/views/Setting/components/taskSaveModal.vue";
+import TaskUpdateModal from "@/views/Setting/components/taskUpdateModal.vue";
 
 const activeKey = ref('');
 const tabsChange = (activeKey) => {
@@ -126,7 +130,7 @@ const showEnvSaveModal = () => {
 };
 const showDeleteEnvConfirm = (record) => {
     Modal.confirm({
-        title: record.name + ' 环境确定删除吗？',
+        title: record.name + ' 确定删除吗？',
         onOk() {
             deleteEnv(record.id)
         }
@@ -195,7 +199,7 @@ const showSaveImageModal = () => {
 };
 const showDeleteImageConfirm = (record) => {
     Modal.confirm({
-        title: record.name + ' 镜像确定删除吗？',
+        title: record.name + ' 确定删除吗？',
         onOk() {
             deleteImage(record.id)
         }
@@ -205,7 +209,6 @@ const showUpdateImageModal = (record) => {
     imageUpdateModal.value.visible = true;
     imageUpdateRecord.value = record;
 };
-
 
 
 const taskDataSource = ref([]);
@@ -226,6 +229,9 @@ const taskPagination = ref({
     size: 'medium',
     hideOnSinglePage: true
 });
+const taskSaveModal = ref(false);
+const taskUpdateRecord = ref(null);
+const taskUpdateModal = ref(false);
 const getTasksData = () => {
     getTaskData(taskPagination.value.current, taskPagination.value.pageSize)
             .then((res) => {
@@ -242,6 +248,22 @@ const taskRefresh = () => {
     taskOnPaginationChange({current: 1, pageSize: 10})
     message.success('操作成功')
 };
+const showTaskSaveModal = () => {
+    taskSaveModal.value.visible = true;
+};
+const showTaskDeleteModal = (record) => {
+    Modal.confirm({
+        title: record.name + ' 确定删除吗？',
+        onOk() {
+            deleteTask(record.id)
+        }
+    })
+};
+const showTaskUpdateModal = (record) => {
+    taskUpdateModal.value.visible = true;
+    taskUpdateRecord.value = record;
+}
+
 
 </script>
 
