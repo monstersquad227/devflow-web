@@ -1,90 +1,95 @@
 <template>
     <Layout>
         <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
-        <a-tab-pane key="1" >
-            <template #tab>
-                <span>
-                    <EnvironmentOutlined />
-                    环境
-                </span>
-            </template>
-            <div class="table-header">
-                <a-button type="primary">添加</a-button>
-                <a-button type="primary" @click="envRefresh">刷新</a-button>
-            </div>
-            <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 1500 }" :pagination="envPagination" @change="envOnPaginationChange" >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'action'">
-                        <span>
-                            <a>编辑</a>
-                            <a-divider type="vertical" />
-                            <a>删除</a>
-                        </span>
-                    </template>
+            <a-tab-pane key="1" >
+                <template #tab>
+                    <span>
+                        <EnvironmentOutlined />
+                        环境
+                    </span>
                 </template>
-            </a-table>
-        </a-tab-pane>
-        <a-tab-pane key="2" >
-            <template #tab>
-                <span>
-                    <EnvironmentOutlined />
-                    镜像
-                </span>
-            </template>
-            <div class="table-header">
-                <a-button type="primary">添加</a-button>
-                <a-button type="primary" @click="imageRefresh">刷新</a-button>
-            </div>
-            <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 1500 }" :pagination="imagePagination" @change="imageOnPaginationChange" >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'action'">
-                        <span>
-                            <a>编辑</a>
-                            <a-divider type="vertical" />
-                            <a>删除</a>
-                        </span>
+                <div class="table-header">
+                    <a-button type="primary" @click="showEnvSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button type="primary" @click="envRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
+                </div>
+                <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 1500 }" :pagination="envPagination" @change="envOnPaginationChange" >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'action'">
+                            <span>
+                                <a @click="showUpdateModal(record)">编辑</a>
+                                <a-divider type="vertical" />
+                                <a @click="showDeleteConfirm(record)">删除</a>
+                            </span>
+                        </template>
                     </template>
+                </a-table>
+            </a-tab-pane>
+            <a-tab-pane key="2" >
+                <template #tab>
+                    <span>
+                        <EnvironmentOutlined />
+                        镜像
+                    </span>
                 </template>
-            </a-table>
-        </a-tab-pane>
-        <a-tab-pane key="3" >
-            <template #tab>
-                <span>
-                    <EnvironmentOutlined />
-                    任务
-                </span>
-            </template>
-            <div class="table-header">
-                <a-button type="primary">添加</a-button>
-                <a-button type="primary" @click="taskRefresh">刷新</a-button>
-            </div>
-            <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'action'">
-                        <span>
-                            <a>编辑</a>
-                            <a-divider type="vertical" />
-                            <a>删除</a>
-                        </span>
+                <div class="table-header">
+                    <a-button type="primary"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button type="primary" @click="imageRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
+                </div>
+                <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 1500 }" :pagination="imagePagination" @change="imageOnPaginationChange" >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'action'">
+                            <span>
+                                <a>编辑</a>
+                                <a-divider type="vertical" />
+                                <a>删除</a>
+                            </span>
+                        </template>
                     </template>
+                </a-table>
+            </a-tab-pane>
+            <a-tab-pane key="3" >
+                <template #tab>
+                    <span>
+                        <EnvironmentOutlined />
+                        任务
+                    </span>
                 </template>
-            </a-table>
-        </a-tab-pane>
-    </a-tabs>
+                <div class="table-header">
+                    <a-button type="primary"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button type="primary" @click="taskRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
+                </div>
+                <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'action'">
+                            <span>
+                                <a>编辑</a>
+                                <a-divider type="vertical" />
+                                <a>删除</a>
+                            </span>
+                        </template>
+                    </template>
+                </a-table>
+            </a-tab-pane>
+        </a-tabs>
+        <EnvSaveModal ref="envSaveModal" />
+        <EnvUpdateModal ref="envUpdateModal" :env="envUpdateRecord" />
     </Layout>
 </template>
 
 <script setup>
 
 import { ref } from "vue";
-import { getEnvData, getImageData, getTaskData } from "@/http/setting";
+import {deleteEnv, getEnvData, getImageData, getTaskData} from "@/http/setting";
 import Layout from "@/components/Layout.vue";
+import EnvSaveModal from "@/views/Setting/components/EnvSaveModal.vue";
+import {message, Modal} from "ant-design-vue";
+import EnvUpdateModal from "@/views/Setting/components/EnvUpdateModal.vue";
 
 const activeKey = ref('')
 const envDataSource = ref([])
 const envColumns = [
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
-    { title: '名称', align: 'center', dataIndex: 'name', key: 'name', width: 80 },
+    { title: '环境名', align: 'center', dataIndex: 'name', key: 'name', width: 80 },
     { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150 },
     { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
@@ -136,6 +141,26 @@ const taskPagination = ref({
     hideOnSinglePage: true
 })
 
+const envSaveModal = ref(false);
+const showEnvSaveModal = () => {
+    envSaveModal.value.visible = true;
+};
+const showDeleteConfirm = (record) => {
+    Modal.confirm({
+        title: record.name + ' 环境确定删除吗？',
+        onOk() {
+            deleteEnv(record.id)
+        }
+    })
+};
+const envUpdateRecord = ref(null);
+const envUpdateModal = ref(false);
+const showUpdateModal = (record) => {
+      envUpdateModal.value.visible = true;
+      envUpdateRecord.value = record;
+};
+
+
 function tabsChange(activeKey) {
     switch (activeKey) {
         case '1':
@@ -165,8 +190,10 @@ function envOnPaginationChange({current}) {
     envPagination.value.current = current
     getEnvsData()
 }
+
 function envRefresh() {
     envOnPaginationChange({current: envPagination.value.current, pageSize: 10})
+    message.success('操作成功');
 }
 
 function getImagesData() {
@@ -200,6 +227,8 @@ function taskOnPaginationChange({ current }) {
 function taskRefresh() {
     taskOnPaginationChange({current: taskPagination.value.current, pageSize: 10})
 }
+
+
 
 </script>
 

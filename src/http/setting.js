@@ -19,6 +19,34 @@ export function getNamespacesByEnv(env) {
 	})
 }
 
+export function postSaveEnv(data) {
+	return request({
+		url: `${DEVFLOW}/setting/envs`,
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function deleteEnv(id) {
+	return request({
+		url: `${DEVFLOW}/setting/envs/${id}`,
+		method: 'DELETE'
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function updateEnv(id, data) {
+	return request({
+		url: `${DEVFLOW}/setting/envs/${id}`,
+		method: 'PUT',
+		data
+	},{
+		successMessageText: '操作成功'
+	})
+}
+
 export function getImageData(pageNumber, pageSize) {
 	return request({
 		url: `${DEVFLOW}/setting/images`,
