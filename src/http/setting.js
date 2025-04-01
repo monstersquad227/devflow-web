@@ -58,6 +58,34 @@ export function getImageData(pageNumber, pageSize) {
 	})
 }
 
+export function postSaveImage(data) {
+	return request({
+		url: `${DEVFLOW}/setting/images`,
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function deleteImage(id) {
+	return request({
+		url: `${DEVFLOW}/setting/images/${id}`,
+		method: 'DELETE'
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
+export function updateImage(id, data) {
+	return request({
+		url: `${DEVFLOW}/setting/images/${id}`,
+		method: 'PUT',
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
 export function getTaskData(pageNumber, pageSize) {
 	return request({
 		url: `${DEVFLOW}/setting/tasks`,
