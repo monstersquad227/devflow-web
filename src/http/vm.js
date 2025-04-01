@@ -26,6 +26,16 @@ export function postSaveVmData(data) {
 	})
 }
 
+export function updateVmData(data) {
+	return request({
+		url: `${DEVFLOW}/vms`,
+		method: 'PUT',
+		data
+	}, {
+		successMessageText: "操作成功"
+	})
+}
+
 export function delVmData(id) {
 	return request({
 		url: `${DEVFLOW}/vms/${id}`,

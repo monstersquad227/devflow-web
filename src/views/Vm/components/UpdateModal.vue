@@ -38,8 +38,10 @@
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {defineProps, ref, watchEffect} from "vue";
+import {updateVmData} from "@/http/vm";
 
 const formState = ref({
+    id: null,
     instance_id: '',
     instance_name: '',
     private_ip: '',
@@ -80,7 +82,7 @@ const props = defineProps({
     vm: Object,
 });
 const handleOk = () => {
-    console.log("提交的构建数据：", formState.value);
+    updateVmData(formState.value)
     visible.value = false;
 };
 const handleCancel = () => {
@@ -89,11 +91,13 @@ const handleCancel = () => {
 
 watchEffect(() => {
     if (props.vm && visible.value === true) {
+        formState.value.id = props.vm.id;
         formState.value.instance_id = props.vm.instance_id;
         formState.value.instance_name = props.vm.instance_name;
         formState.value.private_ip = props.vm.private_ip;
         formState.value.public_ip = props.vm.public_ip;
         formState.value.spec = props.vm.spec;
+        formState.value.application = props.vm.application;
         formState.value.region = props.vm.region;
         formState.value.cloud_provider = props.vm.cloud_provider;
         formState.value.os = props.vm.os;
