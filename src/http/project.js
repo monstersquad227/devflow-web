@@ -48,6 +48,16 @@ export function saveProjects(data) {
 	})
 }
 
+export function updateProjects(id, data) {
+	return request({
+		url: `${DEVFLOW}/projects/${id}`,
+		method: 'PUT',
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
 export function buildProjects(data, projectId) {
 	return request({
 		url: `${DEVFLOW}/projects/${projectId}/build`,

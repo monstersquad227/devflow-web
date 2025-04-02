@@ -17,12 +17,12 @@
                 <a-row>
                     <a-col :span="12">
                         <a-form-item label="GitLabID" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" >
-                            <a-input v-model:value="formState.gitlab_id" />
+                            <a-input-number v-model:value="formState.gitlab_id" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
                         <a-form-item label="任务ID" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" >
-                            <a-input v-model:value="formState.task_id" />
+                            <a-select v-model:value="formState.task_id" :options="taskOptions" />
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -47,11 +47,15 @@
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
+import {getTaskData} from "@/http/setting";
+import {updateProjects} from "@/http/project";
+import {message} from "ant-design-vue";
 
 const visible = ref(false);
 const props = defineProps({
     project: Object,
 })
+const taskOptions = ref([])
 const formState = ref({
     id: null,
     gitlab_id: null,
@@ -64,12 +68,28 @@ const formState = ref({
     description: ''
 })
 const handleOk = () => {
+    updateProjects(formState.value.id, formState.value)
+            .then((res) => {
+                if (res.rowsAffected !== 1 ) {
+                    message.error("脏数据")
+                }
+            })
     console.log(formState.value);
     visible.value = false;
 };
 
 watchEffect(() => {
-    if (props.project && visible.value === true) {
+    if (visible.value === true) {
+        getTaskData(1, 100)
+                .then((res) => {
+                    const { data } = res;
+                    taskOptions.value = data.map(item => ({
+                        label: item.name,
+                        value: item.id,
+                    }))
+                })
+    }
+    if (props.project) {
         formState.value.id = props.project.id;
         formState.value.gitlab_id = props.project.gitlab_id;
         formState.value.task_id = props.project.task_id;
@@ -88,5 +108,7 @@ defineExpose({
 </script>
 
 <style scoped>
-
+:deep(.ant-input-number) {
+    width: 100%;
+}
 </style>
