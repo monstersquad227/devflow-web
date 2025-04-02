@@ -24,7 +24,12 @@ const formState = ref({
     name: '',
     image_id: null
 });
-const imageOptions = ref([])
+const imageOptions = ref([]);
+const handleOk = () => {
+    postSaveTask(formState.value);
+    console.log(formState.value);
+    visible.value = false;
+};
 
 watchEffect(() => {
     if ( visible.value === true ) {
@@ -33,21 +38,15 @@ watchEffect(() => {
             image_id: null
         }
         getImageData(1, 100)
-                .then((res) => {
-                    const { data } = res;
-                    imageOptions.value = data.map(item => ({
-                        label: item.name,
-                        value: item.id
-                    }))
-                })
+            .then((res) => {
+                const { data } = res;
+                imageOptions.value = data.map(item => ({
+                    label: item.name,
+                    value: item.id
+                }))
+            })
     }
-})
-
-const handleOk = () => {
-    postSaveTask(formState.value);
-    console.log(formState.value);
-    visible.value = false;
-};
+});
 
 defineExpose({
     visible,

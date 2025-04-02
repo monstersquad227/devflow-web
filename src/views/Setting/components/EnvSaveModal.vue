@@ -16,17 +16,18 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref} from "vue";
 import {postSaveEnv} from "@/http/setting";
 
-const visible = ref(false)
+const visible = ref(false);
 const formState = ref({
     name: ''
-})
+});
 const handleOk = () => {
     postSaveEnv(formState.value)
     visible.value = false;
-}
+};
+
 defineExpose({
     visible,
-})
+});
 </script>
 
 <style scoped>

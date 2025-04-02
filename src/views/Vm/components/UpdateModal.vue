@@ -1,6 +1,6 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="更新机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" @cancel="handleCancel" >
+        <a-modal v-model:open="visible" title="更新机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
             <a-form :model="formState" layout="horizontal" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-form-item label="实例ID">
                     <a-input v-model:value="formState.instance_id" disabled />
@@ -37,8 +37,8 @@
 <script setup>
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {defineProps, ref, watchEffect} from "vue";
-import {updateVmData} from "@/http/vm";
+import { defineProps, ref, watchEffect } from "vue";
+import { updateVmData } from "@/http/vm";
 
 const formState = ref({
     id: null,
@@ -51,7 +51,7 @@ const formState = ref({
     region: '',
     cloud_provider: '',
     os: ''
-})
+});
 const visible = ref(false);
 const specOptions = ref([
     { label: '1C2G', value: 'small' },
@@ -77,15 +77,12 @@ const osOptions = ref([
     { label: 'Windows', value: 'win' },
     { label: 'Ubuntu', value: 'ubuntu' },
     { label: 'Debian', value: 'debian' }
-])
+]);
 const props = defineProps({
     vm: Object,
 });
 const handleOk = () => {
     updateVmData(formState.value)
-    visible.value = false;
-};
-const handleCancel = () => {
     visible.value = false;
 };
 
@@ -102,7 +99,7 @@ watchEffect(() => {
         formState.value.cloud_provider = props.vm.cloud_provider;
         formState.value.os = props.vm.os;
     }
-})
+});
 
 defineExpose({
     visible,

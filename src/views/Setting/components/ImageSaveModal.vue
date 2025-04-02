@@ -13,14 +13,13 @@
 <script setup>
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {ref} from "vue";
-import {postSaveImage} from "@/http/setting";
+import { ref } from "vue";
+import { postSaveImage } from "@/http/setting";
 
 const visible = ref(false);
 const formState = ref({
     name: '',
 });
-
 const handleOk = () => {
     postSaveImage(formState.value);
     console.log(formState.value);

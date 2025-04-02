@@ -54,8 +54,8 @@ import {message} from "ant-design-vue";
 const visible = ref(false);
 const props = defineProps({
     project: Object,
-})
-const taskOptions = ref([])
+});
+const taskOptions = ref([]);
 const formState = ref({
     id: null,
     gitlab_id: null,
@@ -66,7 +66,7 @@ const formState = ref({
     project_build_path: '',
     project_package_name: '',
     description: ''
-})
+});
 const handleOk = () => {
     updateProjects(formState.value.id, formState.value)
             .then((res) => {
@@ -100,11 +100,11 @@ watchEffect(() => {
         formState.value.project_package_name = props.project.project_package_name;
         formState.value.description = props.project.description;
     }
-})
+});
 
 defineExpose({
     visible,
-})
+});
 </script>
 
 <style scoped>

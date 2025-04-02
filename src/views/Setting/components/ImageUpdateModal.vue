@@ -28,7 +28,7 @@ const handleOk = () => {
     updateImage(formState.value.id, formState.value);
     console.log(formState.value);
     visible.value = false;
-}
+};
 
 watchEffect(() => {
     if (props.image && visible.value === true) {

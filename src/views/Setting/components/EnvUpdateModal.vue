@@ -13,18 +13,21 @@
 <script setup>
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {ref, watchEffect} from "vue";
-import {updateEnv} from "@/http/setting";
-
+import { ref, watchEffect } from "vue";
+import { updateEnv } from "@/http/setting";
 
 const visible = ref(false);
 const props = defineProps({
     env: Object,
-})
+});
 const formState = ref({
     id: null,
     name: ''
 });
+const handleOk = () => {
+    updateEnv(formState.value.id, formState.value)
+    visible.value = false;
+};
 
 watchEffect(() => {
     if (props.env) {
@@ -32,11 +35,6 @@ watchEffect(() => {
         formState.value.name = props.env.name;
     }
 });
-
-const handleOk = () => {
-    updateEnv(formState.value.id, formState.value)
-    visible.value = false;
-};
 
 defineExpose({
     visible,

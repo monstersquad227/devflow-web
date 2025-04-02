@@ -18,6 +18,7 @@
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
 import {getImageData, updateTask} from "@/http/setting";
+
 const visible = ref(false);
 const props = defineProps({
     task: Object,
@@ -27,13 +28,12 @@ const formState = ref({
     name: '',
     image_id: ''
 });
-const imageOptions = ref([])
-
+const imageOptions = ref([]);
 const handleOk = () => {
     updateTask(formState.value.id, formState.value)
     console.log(formState.value);
     visible.value = false;
-}
+};
 
 watchEffect(() => {
     if (visible.value === true) {
@@ -51,11 +51,11 @@ watchEffect(() => {
         formState.value.name = props.task.name;
         formState.value.image_id = props.task.image_id;
     }
-})
+});
 
 defineExpose({
     visible,
-})
+});
 </script>
 
 <style scoped>

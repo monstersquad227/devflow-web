@@ -45,7 +45,7 @@ const routes = [
             auth: true,
             title: '配置列表',
             icon: 'SettingOutlined',
-            roles: ['Owner', 'Admin']
+            roles: ['Owner', 'Maintainer']
         }
     },
     {

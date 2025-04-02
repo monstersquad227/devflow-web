@@ -1,6 +1,6 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="添加项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" @cancel="handleCancel">
+        <a-modal v-model:open="visible" title="添加项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
             <a-form :model="formState" layout="horizontal" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-form-item label="项目名">
                     <a-input v-model:value="formState.gitlab_name" placeholder="请输入项目名" />
@@ -26,9 +26,9 @@
 </template>
 
 <script setup>
-import {ref, watchEffect} from "vue";
-import { getTaskData } from "@/http/setting"
-import { saveProjects } from "@/http/project"
+import { ref, watchEffect } from "vue";
+import { getTaskData } from "@/http/setting";
+import { saveProjects } from "@/http/project";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 
 const visible = ref(false);
@@ -42,21 +42,10 @@ const formState = ref({
 });
 const taskOptions = ref([]);
 const handleOk = () => {
-    console.log("提交的表单数据：", formState.value);
     saveProjects(formState.value)
     visible.value = false;
 };
-const handleCancel = () => {
-    visible.value = false;
-};
-
-watchEffect(()=> {
-    if (visible.value === true) {
-        getTemplateData();
-    }
-});
-
-function getTemplateData() {
+const getTemplateData = () => {
     getTaskData(1, 100)
         .then((res) => {
             const { data } = res
@@ -65,7 +54,13 @@ function getTemplateData() {
                 value: item.id,
             }))
         })
-}
+};
+
+watchEffect(()=> {
+    if (visible.value === true) {
+        getTemplateData();
+    }
+});
 
 defineExpose({
     visible,

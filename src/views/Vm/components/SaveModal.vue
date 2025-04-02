@@ -1,6 +1,6 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="添加机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" @cancel="handleCancel" >
+        <a-modal v-model:open="visible" title="添加机器" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
             <a-form :model="formState" layout="horizontal" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-form-item label="实例ID">
                     <a-input v-model:value="formState.instance_id" placeholder="请输入项目ID" />
@@ -40,9 +40,9 @@
 <script setup>
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {ref, watchEffect} from "vue";
-import {Base64} from "js-base64";
-import {postSaveVmData} from "@/http/vm";
+import { ref, watchEffect } from "vue";
+import { Base64 } from "js-base64";
+import { postSaveVmData } from "@/http/vm";
 
 const visible = ref(false);
 const formState = ref({
@@ -80,7 +80,12 @@ const osOptions = ref([
     { label: 'Centos', value: 'centos' },
     { label: 'Ubuntu', value: 'ubuntu' },
     { label: 'Debian', value: 'debian' }
-])
+]);
+const handleOk = () => {
+    formState.value.password = Base64.encode(formState.value.password);
+    postSaveVmData(formState.value)
+    visible.value = false;
+};
 
 watchEffect(() => {
     if (visible.value === true) {
@@ -97,19 +102,9 @@ watchEffect(() => {
             os: ''
         }
     }
-})
-
-const handleOk = () => {
-    formState.value.password = Base64.encode(formState.value.password);
-    postSaveVmData(formState.value)
-    visible.value = false;
-};
-const handleCancel = () => {
-    visible.value = false;
-};
+});
 
 defineExpose({
     visible,
 });
-
 </script>
