@@ -22,7 +22,8 @@ const routes = [
         meta: {
             auth: true,
             title: '项目列表',
-            icon: 'AppstoreOutlined'
+            icon: 'AppstoreOutlined',
+            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter'],
         }
     },
     {
@@ -32,7 +33,8 @@ const routes = [
         meta: {
             auth: true,
             title: '机器列表',
-            icon: 'HddOutlined'
+            icon: 'HddOutlined',
+            roles: ['Owner']
         }
     },
     {
@@ -42,7 +44,8 @@ const routes = [
         meta: {
             auth: true,
             title: '配置列表',
-            icon: 'SettingOutlined'
+            icon: 'SettingOutlined',
+            roles: ['Owner', 'Admin']
         }
     },
     {
@@ -70,7 +73,12 @@ router.beforeEach((to, from, next) => {
         if (to.name === "Login") {
             next('/')
         } else {
-            next()
+            const roles = store.getters.roles;
+            if (to.meta.roles && !roles.some(role => to.meta.roles.includes(role))) {
+                next('/');
+            } else {
+                next();
+            }
         }
     } else {
         next(to.meta?.auth ? '/login' : undefined);

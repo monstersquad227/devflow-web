@@ -33,13 +33,11 @@
 </template>
 <script setup>
 
-import {createVNode, onMounted, ref} from "vue";
-import {delVmData, getVmData, getVmPasswordData} from "@/http/vm"
+import {onMounted, ref} from "vue";
+import {delVmData, getVmData, getVmPasswordData} from "@/http/vm";
 import Layout from "@/components/Layout.vue";
 import SaveModal from "@/views/Vm/components/SaveModal.vue";
 import {Modal} from "ant-design-vue";
-import {ExclamationCircleOutlined} from "@ant-design/icons-vue";
-import {pem as base64} from "node-forge";
 import {Base64} from "js-base64";
 import UpdateModal from "@/views/Vm/components/UpdateModal.vue";
 
@@ -48,10 +46,10 @@ const pagination = ref({
     pageSize: 10,
     total: 0,
     size: 'medium'
-})
-const dataSource = ref([])
+});
+const dataSource = ref([]);
 const columns = [
-    { title: '', align: 'center', dataIndex: 'id', key: 'id', width: 80 },
+    { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 80 },
     { title: '实例ID', align: 'center', dataIndex: 'instance_id', key: 'instance_id', width: 220 },
     { title: '实例名称', align: 'center', dataIndex: 'instance_name', key: 'instance_name', width: 180 },
     { title: '内网IP', align: 'center', dataIndex: 'private_ip', key: 'private_ip', width: 180 },
@@ -63,11 +61,10 @@ const columns = [
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '修改时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
     { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
-]
-const vmSaveModal = ref(false)
-const vmUpdateModal = ref(false)
-const vmUpdateRecord = ref(null)
-
+];
+const vmSaveModal = ref(false);
+const vmUpdateModal = ref(false);
+const vmUpdateRecord = ref(null);
 const showDeleteVmModal = (record) => {
     Modal.confirm({
         title: record.instance_id+' 确定删除吗?',
@@ -77,7 +74,6 @@ const showDeleteVmModal = (record) => {
         },
     })
 };
-
 const showPasswordModal = async (record) => {
     const password = ref('')
     try {
@@ -92,37 +88,33 @@ const showPasswordModal = async (record) => {
         content: password.value,
     })
 };
-
 const showUpdateModal = (record) => {
     vmUpdateRecord.value = record;
     vmUpdateModal.value.visible = true;
-}
-
-onMounted(() => {
-    getData()
-})
-
-function getData() {
+};
+const getData = () => {
     getVmData(pagination.value.current, pagination.value.pageSize)
         .then(res => {
             const { data, total } = res
             dataSource.value = data || []
             pagination.value.total = total || 0
         })
-}
-
-function onPaginationChange({ current }) {
+};
+const onPaginationChange = ({ current }) => {
     pagination.value.current = current
     getData()
-}
-
-function showSaveModal() {
+};
+const showSaveModal = () => {
     vmSaveModal.value.visible = true
-}
+};
+const refresh = () => {
+    onPaginationChange({ current: 1, pageSize: 10})
+};
 
-function refresh() {
-    onPaginationChange({ current: pagination.value.current, pageSize: 10})
-}
+onMounted(() => {
+    getData()
+});
+
 </script>
 <style scoped>
 .table-header {

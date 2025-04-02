@@ -58,14 +58,34 @@ watchEffect(() => {
     selectedKeys.value = [router.currentRoute.value.path];
 });
 
+/*
+// const menuRoutes = computed(() =>
+//     router.options.routes.filter(route => route.meta?.title).map(route => ({
+//         ...route,
+//     }))
+// );
+*/
 const menuRoutes = computed(() =>
-    router.options.routes.filter(route => route.meta?.title).map(route => ({
-        ...route,
-    }))
+    router.options.routes
+        .filter(route => route.meta?.title)  // 只保留有 title 的菜单项
+        .filter(route => {
+            const roles = store.getters.roles; // 获取当前用户角色
+            return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
+        })
 );
-function handleClick(info) {
+
+const handleClick = (info) => {
     router.push(info.key);
 }
+const handleLogo = () => {
+    router.push('/')
+}
+const logout = () => {
+    store.dispatch('clearUserInfo')
+    router.push('/login')
+}
+
+/*
 function handleLogo() {
     router.push('/');
 }
@@ -73,6 +93,7 @@ function logout() {
     store.dispatch('clearUserInfo')
     router.push('/login')
 }
+ */
 
 </script>
 

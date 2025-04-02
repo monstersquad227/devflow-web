@@ -40,13 +40,12 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import {delProjects, getProjects} from "@/http/project";
+import { delProjects, getProjects } from "@/http/project";
 import SaveModal from "./components/SaveModal.vue";
 import BuildModal from "./components/BuildModal.vue"
 import DeployModal from "@/views/Project/components/DeployModal.vue";
 import Layout from "@/components/Layout.vue";
-import {Modal} from "ant-design-vue";
-import {delVmData} from "@/http/vm";
+import { Modal } from "ant-design-vue";
 import UpdateModal from "@/views/Project/components/UpdateModal.vue";
 
 
@@ -80,42 +79,68 @@ const showDeleteProjectModal = (record) => {
             delProjects(record.id)
         },
     })
-}
+};
 const showUpdateModal = (record) => {
     projectUpdateModal.value.visible = true;
     projectUpdateRecord.value = record;
-}
-
-
-onMounted(() => {
-    getProject();
-});
-function getProject() {
+};
+const getProject = () => {
     getProjects(pagination.value.current, pagination.value.pageSize)
         .then((res) => {
             const { data, total } = res
             dataSource.value = data
             pagination.value.total = total
         })
-}
-function onPaginationChange({ current }) {
+};
+const onPaginationChange = ({ current }) => {
     pagination.value.current = current
     getProject()
-}
-function refresh() {
-    onPaginationChange({current: pagination.value.current, pageSize: 10})
-}
-function showSaveModal() {
+};
+const refresh = () => {
+    onPaginationChange({current: 1, pageSize: 10})
+};
+const showSaveModal = () => {
     projectSaveModal.value.visible = true;
-}
-function showBuildModal(record) {
+};
+const showBuildModal = (record) => {
     projectBuildRecord.value = record;
     projectBuildModal.value.visible = true;
-}
-function showDeployModal(record) {
+};
+const showDeployModal = (record) => {
     projectDeployRecord.value = record
     projectDeployModal.value.visible = true;
 }
+
+onMounted(() => {
+    getProject();
+});
+
+// function getProject() {
+//     getProjects(pagination.value.current, pagination.value.pageSize)
+//         .then((res) => {
+//             const { data, total } = res
+//             dataSource.value = data
+//             pagination.value.total = total
+//         })
+// }
+// function onPaginationChange({ current }) {
+//     pagination.value.current = current
+//     getProject()
+// }
+// function refresh() {
+//     onPaginationChange({current: pagination.value.current, pageSize: 10})
+// }
+// function showSaveModal() {
+//     projectSaveModal.value.visible = true;
+// }
+// function showBuildModal(record) {
+//     projectBuildRecord.value = record;
+//     projectBuildModal.value.visible = true;
+// }
+// function showDeployModal(record) {
+//     projectDeployRecord.value = record
+//     projectDeployModal.value.visible = true;
+// }
 </script>
 
 <style>

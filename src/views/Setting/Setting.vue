@@ -262,8 +262,7 @@ const showTaskDeleteModal = (record) => {
 const showTaskUpdateModal = (record) => {
     taskUpdateModal.value.visible = true;
     taskUpdateRecord.value = record;
-}
-
+};
 
 </script>
 

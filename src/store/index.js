@@ -11,6 +11,7 @@ export default createStore({
         token: (state) => state.userInfo.token,
         isLogin: (state) => Boolean(state.userInfo.token),
         userInfo: (state) => state.userInfo,
+        roles: (state) => state.userInfo.user.roles,
     },
     mutations: {
         SET_USER_INFO: (state, data) => (state.userInfo = data),
