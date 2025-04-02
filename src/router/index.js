@@ -31,7 +31,7 @@ const routes = [
         component: () => import('@/views/Vm/Vm.vue'),
         meta: {
             auth: true,
-            title: '虚拟机列表',
+            title: '机器列表',
             icon: 'HddOutlined'
         }
     },
