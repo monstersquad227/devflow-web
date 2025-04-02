@@ -14,7 +14,7 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1000 }" @change="onPaginationChange" >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'build'">
-                    <a-button type="link" @click="showBuildModal(record)">build</a-button>
+                    <a-button type="link" :disabled="idIsExist(record.id, projectBuildStatus)" :loading="idIsExist(record.id, projectBuildStatus)" @click="showBuildModal(record)" >{{ buildButtonText(record.id) }}</a-button>
                 </template>
                 <template v-if="column.key === 'deploy'">
                     <a-button type="link" @click="showDeployModal(record)">deploy</a-button>
@@ -39,14 +39,16 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { delProjects, getProjects } from "@/http/project";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { delProjects, getProjects, getProjectsBuildStatus } from "@/http/project";
 import SaveModal from "./components/SaveModal.vue";
 import BuildModal from "./components/BuildModal.vue"
 import DeployModal from "@/views/Project/components/DeployModal.vue";
 import Layout from "@/components/Layout.vue";
 import { Modal } from "ant-design-vue";
 import UpdateModal from "@/views/Project/components/UpdateModal.vue";
+import { onBeforeRouteLeave } from "vue-router";
+import { idIsExist } from "@/utils/exists";
 
 
 const dataSource = ref([]);
@@ -54,9 +56,9 @@ const columns = [
     { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
     { title: "项目名", align: "center", dataIndex: "gitlab_name", key: "gitlab_name", width: 200 },
     { title: "应用名", align: "center", dataIndex: "deployment_name", key: "deployment_name", width: 200 },
-    { title: "任务ID", align: "center", dataIndex: "task_id", key: "task_id", width: 150 },
-    { title: "构建", align: "center", key: "build", width: 100 },
-    { title: "发布", align: "center", key: "deploy", width: 100 },
+    { title: "任务ID", align: "center", dataIndex: "task_id", key: "task_id", width: 130 },
+    { title: "构建", align: "center", key: "build", width: 110 },
+    { title: "发布", align: "center", key: "deploy", width: 110 },
     { title: "操作", align: "center", key: "action", fixed: 'right', width: 180 },
 ];
 const pagination= ref({
@@ -71,6 +73,8 @@ const projectBuildRecord = ref(null);
 const projectDeployRecord = ref(null)
 const projectUpdateModal = ref(false);
 const projectUpdateRecord = ref(null);
+const projectBuildStatus = ref([]);
+const projectBuildStatusIntervalId = ref(null);
 
 const showDeleteProjectModal = (record) => {
     Modal.confirm({
@@ -109,10 +113,33 @@ const showBuildModal = (record) => {
 const showDeployModal = (record) => {
     projectDeployRecord.value = record
     projectDeployModal.value.visible = true;
-}
-
+};
+const buildButtonText = (id) => {
+    return projectBuildStatus.value.includes(id) ? 'Running' : 'build';
+};
+const fetchProjectsBuildStatus = () => {
+    getProjectsBuildStatus()
+        .then((res) => {
+            projectBuildStatus.value = res;
+        })
+};
+const startCheckBuildStatusesInterval = () => {
+    projectBuildStatusIntervalId.value = setInterval(() => {
+        fetchProjectsBuildStatus();
+    }, 3000)
+};
+const stopCheckBuildStatusesInterval = () => {
+    clearInterval(projectBuildStatusIntervalId.value);
+};
 onMounted(() => {
     getProject();
+    startCheckBuildStatusesInterval();
+});
+onBeforeUnmount(() => {
+    stopCheckBuildStatusesInterval();
+});
+onBeforeRouteLeave(() => {
+    stopCheckBuildStatusesInterval();
 });
 
 // function getProject() {

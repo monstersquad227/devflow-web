@@ -92,11 +92,8 @@ const handleOk = () => {
         short_id: formState.value.short_id,
         command: formState.value.command
     }
-    buildProjects(data, formState.value.id)
-            .then((res) => {
-                console.log('res: ', res)
-            })
-    console.log("提交的构建数据：", data);
+    buildProjects(data, formState.value.id);
+    setTimeout(() => {}, 1000);
     visible.value = false;
 };
 const branchChange = () => {

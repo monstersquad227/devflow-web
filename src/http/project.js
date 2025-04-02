@@ -67,6 +67,13 @@ export function buildProjects(data, projectId) {
 	})
 }
 
+export function getProjectsBuildStatus() {
+	return request({
+		url: `${DEVFLOW}/projects/build/status`,
+		method: 'GET'
+	})
+}
+
 
 export function delProjects(id) {
 	return request({
