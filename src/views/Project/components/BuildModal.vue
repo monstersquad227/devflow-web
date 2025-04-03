@@ -90,6 +90,8 @@ const handleOk = () => {
         environment_unique: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
         harbor_url: "harbor.chengduoduo.com",
         short_id: formState.value.short_id,
+        project_build_path: formState.value.project_build_path,
+        project_package_name: formState.value.project_package_name,
         command: formState.value.command
     }
     buildProjects(data, formState.value.id);

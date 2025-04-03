@@ -27,6 +27,15 @@ const routes = [
         }
     },
     {
+        path: '/project/:projectId',
+        name: 'ProjectDetail',
+        component: () => import('@/views/Project/Detail.vue'),
+        meta: {
+            auth: true,
+            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
+        }
+    },
+    {
         path: '/vm',
         name: 'Vm',
         component: () => import('@/views/Vm/Vm.vue'),

@@ -1,4 +1,4 @@
-import {request} from './axios'
+import {request} from './axios';
 import {DEVFLOW} from "@/http/constants";
 
 export function getProjects(pageNumber, pageSize) {

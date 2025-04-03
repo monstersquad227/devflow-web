@@ -25,7 +25,7 @@
                         <a-divider type="vertical" />
                         <a @click="showDeleteProjectModal(record)">删除</a>
                         <a-divider type="vertical" />
-                        <a>详情</a>
+                        <a @click="showProjectDetailTable(record)">详情</a>
                     </span>
                 </template>
             </template>
@@ -49,6 +49,7 @@ import { Modal } from "ant-design-vue";
 import UpdateModal from "@/views/Project/components/UpdateModal.vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { idIsExist } from "@/utils/exists";
+import router from "@/router";
 
 
 const dataSource = ref([]);
@@ -131,6 +132,10 @@ const startCheckBuildStatusesInterval = () => {
 const stopCheckBuildStatusesInterval = () => {
     clearInterval(projectBuildStatusIntervalId.value);
 };
+const showProjectDetailTable = (record) => {
+    router.push(`/project/${record.id}`);
+};
+
 onMounted(() => {
     getProject();
     startCheckBuildStatusesInterval();
