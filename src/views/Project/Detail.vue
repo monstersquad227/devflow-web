@@ -1,7 +1,22 @@
 <template>
     <Layout>
-        <a-table :data-source="buildDataSource" :columns="buildColumns" :pagination="buildPagination" :scroll="{ x: 1000 }" @change="buildOnPaginationChange" >
-        </a-table>
+        <a-tabs v-model:activeKey="activeKey" @change="tabsChange">
+            <a-tab-pane key="1" tab="构建详情">
+                <a-table :data-source="buildDataSource" :columns="buildColumns" :pagination="buildPagination" :scroll="{ x: 1000 }" @change="buildOnPaginationChange" >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'jenkins_id'">
+                            <a :href="`http://jenkins.chengdd.cn/job/${record.task_name}/${record.jenkins_id}/consoleText`" target="_blank" >{{ record.jenkins_id }}</a>
+                        </template>
+                    </template>
+                </a-table>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="K8s发布详情">
+
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="Docker发布详情">
+
+            </a-tab-pane>
+        </a-tabs>
     </Layout>
 </template>
 
@@ -10,10 +25,10 @@
 import Layout from "@/components/Layout.vue";
 import { onMounted, ref } from "vue";
 import { useRoute } from 'vue-router';
+import { getProjectDetail } from "@/http/projectDetail";
 
+const activeKey = ref("1");
 const route = useRoute();
-import {getProjectDetail} from "@/http/projectDetail";
-
 const buildDataSource = ref([]);
 const buildColumns = ref([
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 50 },
@@ -33,6 +48,9 @@ const buildPagination = ref({
     hideOnSinglePage: true
 });
 
+const tabsChange = () => {
+    console.log("activeKey", activeKey.value);
+};
 const buildOnPaginationChange = ({ current }) => {
     buildPagination.value.current = current;
 };
