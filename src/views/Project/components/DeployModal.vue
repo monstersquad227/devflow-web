@@ -6,6 +6,7 @@
                     <a-radio-group v-model:value="formState.publish_type" @change="radioChange">
                         <a-radio value="kubernetes">Kubernetes</a-radio>
                         <a-radio value="docker">Docker</a-radio>
+                        <a-radio value="flowedge">FlowEdge</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-row>

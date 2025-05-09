@@ -70,7 +70,7 @@ const formState = ref({
 const handleOk = () => {
     updateProjects(formState.value.id, formState.value)
             .then((res) => {
-                if (res.rowsAffected !== 1 ) {
+                if (res.rowsAffected > 1 ) {
                     message.error("脏数据")
                 }
             })
