@@ -62,7 +62,7 @@ const pagination = ref({
 });
 const dataSource = ref([]);
 const columns = [
-    { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 80 },
+    // { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 80 },
     { title: '实例ID', align: 'center', dataIndex: 'instance_id', key: 'instance_id', width: 220 },
     { title: '实例名称', align: 'center', dataIndex: 'instance_name', key: 'instance_name', width: 180, ellipsis: true },
     { title: '平台', align: 'center', dataIndex: 'cloud_provider', key: 'cloud_provider', width: 80 },
