@@ -11,7 +11,7 @@
                     <ReloadOutlined />
                 </template>刷新</a-button>
         </div>
-        <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1000 }" @change="onPaginationChange" >
+        <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 800 }" @change="onPaginationChange" :rowClassName="() => 'custom-row-style'" >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'build'">
                     <a-button type="link" :disabled="idIsExist(record.id, projectBuildStatus)" :loading="idIsExist(record.id, projectBuildStatus)" @click="showBuildModal(record)" >{{ buildButtonText(record.id) }}</a-button>
@@ -55,11 +55,11 @@ import router from "@/router";
 const dataSource = ref([]);
 const columns = [
     { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
-    { title: "项目名", align: "center", dataIndex: "gitlab_name", key: "gitlab_name", width: 200 },
-    { title: "应用名", align: "center", dataIndex: "deployment_name", key: "deployment_name", width: 200 },
-    { title: "任务ID", align: "center", dataIndex: "task_id", key: "task_id", width: 130 },
-    { title: "构建", align: "center", key: "build", width: 110 },
-    { title: "发布", align: "center", key: "deploy", width: 110 },
+    { title: "项目名", align: "center", dataIndex: "gitlab_name", key: "gitlab_name", width: 150 },
+    { title: "应用名", align: "center", dataIndex: "deployment_name", key: "deployment_name", width: 150 },
+    { title: "任务ID", align: "center", dataIndex: "task_id", key: "task_id", width: 80 },
+    { title: "构建", align: "center", key: "build", width: 80 },
+    { title: "发布", align: "center", key: "deploy", width: 80 },
     { title: "操作", align: "center", key: "action", fixed: 'right', width: 180 },
 ];
 const pagination= ref({
@@ -181,5 +181,11 @@ onBeforeRouteLeave(() => {
     align-items: center;
     margin: 0 0 24px 0;
     gap: 15px;
+}
+
+.custom-row-style td {
+    line-height: 55px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 </style>
