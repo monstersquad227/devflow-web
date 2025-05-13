@@ -68,9 +68,9 @@ const regionOptions = ref([
 const cloudProviderOptions = ref([
     { label: '阿里云', value: 'aliyun' },
     { label: '华为云', value: 'huawei' },
-    { label: '腾讯', value: 'tencent' },
-    { label: 'AWS', value: 'aws' },
-    { label: '机房', value: 'local' }
+    { label: '腾讯云', value: 'tencent' },
+    { label: '亚马云', value: 'aws' },
+    { label: '本地云', value: 'local' }
 ]);
 const osOptions = ref([
     { label: 'Centos', value: 'centos' },
