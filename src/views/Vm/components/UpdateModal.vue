@@ -21,13 +21,13 @@
                     <a-input v-model:value="formState.application" />
                 </a-form-item>
                 <a-form-item label="地区">
-                    <a-select v-model:value="formState.region" :options="regionOptions"/>
+                    <a-select v-model:value="formState.region" :options="regionOptions" :disabled="true"/>
                 </a-form-item>
                 <a-form-item label="平台">
-                    <a-select v-model:value="formState.cloud_provider" :options="cloudProviderOptions"/>
+                    <a-select v-model:value="formState.cloud_provider" :options="cloudProviderOptions" :disabled="true"/>
                 </a-form-item>
                 <a-form-item label="系统">
-                    <a-select v-model:value="formState.os" :options="osOptions"/>
+                    <a-select v-model:value="formState.os" :options="osOptions" :disabled="true"/>
                 </a-form-item>
             </a-form>
         </a-modal>

@@ -61,7 +61,9 @@ const specOptions = ref([
     { label: '1C2G', value: 'small' },
     { label: '2C4G', value: 'medium' },
     { label: '4C8G', value: 'large' },
-    { label: '8C16G', value: 'extraLarge' },
+    { label: '8C16G', value: 'xlarge' },
+    { label: '16C32G', value: '2xlarge' },
+    { label: '32C64G', value: 'ultra' },
 ]);
 const regionOptions = ref([
     { label: '上海', value: 'cn-shanghai' },
@@ -72,9 +74,9 @@ const regionOptions = ref([
 const cloudProviderOptions = ref([
     { label: '阿里云', value: 'aliyun' },
     { label: '华为云', value: 'huawei' },
-    { label: '腾讯', value: 'tencent' },
-    { label: 'AWS', value: 'aws' },
-    { label: '机房', value: 'local' },
+    { label: '腾讯云', value: 'tencent' },
+    { label: 'AWS云', value: 'aws' },
+    { label: '本地云', value: 'local' },
 ]);
 const osOptions = ref([
     { label: 'Centos', value: 'centos' },
