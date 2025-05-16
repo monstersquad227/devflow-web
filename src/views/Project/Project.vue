@@ -65,7 +65,9 @@ const columns = [
 const pagination= ref({
     current: 1,
     pageSize: 10,
-    total: 0
+    total: 0,
+    showSizeChanger: false,
+    size: 'medium'
 });
 const projectSaveModal = ref(false);
 const projectBuildModal = ref(false);

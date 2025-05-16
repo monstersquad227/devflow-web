@@ -58,6 +58,7 @@ const pagination = ref({
     current: 1,
     pageSize: 10,
     total: 0,
+    showSizeChanger: false,
     size: 'medium'
 });
 const dataSource = ref([]);
@@ -124,6 +125,10 @@ const getSpecText = (value) => {
         case 'xlarge': return '超大';
         case '2xlarge': return '巨型';
         case 'ultra': return '至尊';
+        case 'mega': return '超级型';
+        case 'tera': return '太级型';
+        case 'peta': return '拍级型';
+        case 'exa': return '艾级型';
         default: return value;
     }
 };
@@ -135,6 +140,10 @@ const getSpecDescribe = (value) => {
         case 'xlarge': return `8 vCPU / 16 G 内存 / 150 G 磁盘`;
         case '2xlarge': return `16 vCPU / 32 G 内存 / 180 G 磁盘`;
         case 'ultra': return `32 vCPU / 64 G 内存 / 230 G 磁盘`;
+        case 'mega': return `64 vCPU / 128 G 内存 / 280 G 磁盘`;
+        case 'tera': return `128 vCPU / 256 G 内存 / 320 G 磁盘`;
+        case 'peta': return `256 vCPU / 512 G 内存 / 380 G 磁盘`;
+        case 'exa': return `512 vCPU / 1 T 内存 / 520 G 磁盘`;
         default: return value;
     }
 };

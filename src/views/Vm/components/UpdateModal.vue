@@ -57,26 +57,32 @@ const specOptions = ref([
     { label: '1C2G', value: 'small' },
     { label: '2C4G', value: 'medium' },
     { label: '4C8G', value: 'large' },
-    { label: '8C16G', value: 'extraLarge' },
+    { label: '8C16G', value: 'xlarge' },
+    { label: '16C32G', value: '2xlarge' },
+    { label: '32C64G', value: 'ultra' },
+    { label: '64C128G', value: 'mega' },
+    { label: '128C256G', value: 'tera' },
+    { label: '256C512G', value: 'peta' },
+    { label: '512C1T', value: 'exa' }
 ]);
 const regionOptions = ref([
     { label: '上海', value: 'cn-shanghai' },
-    { label: '杭州', value: 'cn-hangzhou' },
-    { label: '香港', value: 'cn-hongkong'},
-    { label: '新加坡', value: 'ap-southeast-1' },
+    // { label: '杭州', value: 'cn-hangzhou' },
+    // { label: '香港', value: 'cn-hongkong'},
+    // { label: '新加坡', value: 'ap-southeast-1' },
 ]);
 const cloudProviderOptions = ref([
-    { label: '阿里云', value: 'aliyun' },
-    { label: '华为云', value: 'huawei' },
-    { label: '腾讯云', value: 'tencent' },
-    { label: '亚马云', value: 'aws' },
-    { label: '本地云', value: 'local' }
+    { label: '本地云', value: 'local' },
+    { label: '阿里云', value: 'aliyun' }
+    // { label: '华为云', value: 'huawei' },
+    // { label: '腾讯云', value: 'tencent' },
+    // { label: '亚马云', value: 'aws' }
 ]);
 const osOptions = ref([
     { label: 'Centos', value: 'centos' },
-    { label: 'Windows', value: 'win' },
-    { label: 'Ubuntu', value: 'ubuntu' },
-    { label: 'Debian', value: 'debian' }
+    { label: 'Windows', value: 'windows' }
+    // { label: 'Ubuntu', value: 'ubuntu' },
+    // { label: 'Debian', value: 'debian' }
 ]);
 const props = defineProps({
     vm: Object,
