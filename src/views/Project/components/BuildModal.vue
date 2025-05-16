@@ -88,7 +88,7 @@ const handleOk = () => {
         branch: formState.value.branch,
         gitlab_repo: formState.value.gitlab_repo,
         environment_unique: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
-        harbor_url: "harbor.chengduoduo.com",
+        harbor_url: "harbor.chengdd.cc",
         short_id: formState.value.short_id,
         project_build_path: formState.value.project_build_path,
         project_package_name: formState.value.project_package_name,

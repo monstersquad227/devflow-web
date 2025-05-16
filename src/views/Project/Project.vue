@@ -14,7 +14,13 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 800 }" @change="onPaginationChange" :rowClassName="() => 'custom-row-style'" >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'build'">
-                    <a-button type="link" :disabled="idIsExist(record.id, projectBuildStatus)" :loading="idIsExist(record.id, projectBuildStatus)" @click="showBuildModal(record)" >{{ buildButtonText(record.id) }}</a-button>
+                    <a-button
+                            type="link"
+                            :danger="idIsExist(record.id, projectBuildStatusFail)"
+                            :disabled="idIsExist(record.id, projectBuildStatus)"
+                            :loading="idIsExist(record.id, projectBuildStatus)"
+                            @click="showBuildModal(record)"
+                    >{{ buildButtonText(record.id) }}</a-button>
                 </template>
                 <template v-if="column.key === 'deploy'">
                     <a-button type="link" @click="showDeployModal(record)">deploy</a-button>
@@ -77,6 +83,7 @@ const projectDeployRecord = ref(null)
 const projectUpdateModal = ref(false);
 const projectUpdateRecord = ref(null);
 const projectBuildStatus = ref([]);
+const projectBuildStatusFail = ref([]);
 const projectBuildStatusIntervalId = ref(null);
 
 const showDeleteProjectModal = (record) => {
@@ -123,7 +130,8 @@ const buildButtonText = (id) => {
 const fetchProjectsBuildStatus = () => {
     getProjectsBuildStatus()
         .then((res) => {
-            projectBuildStatus.value = res;
+            projectBuildStatus.value = res.ing;
+            projectBuildStatusFail.value = res.fail;
         })
 };
 const startCheckBuildStatusesInterval = () => {
