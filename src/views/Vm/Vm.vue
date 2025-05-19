@@ -20,6 +20,10 @@
                         <a-divider type="vertical" />
                         <a @click="showDeleteVmModal(record)">删除</a>
                         <a-divider type="vertical" />
+                        <template v-if="record.cloud_provider === 'aliyun'">
+                            <a>续费</a>
+                            <a-divider type="vertical" />
+                        </template>
                         <a @click="showPasswordModal(record)">查看密码</a>
                     </span>
                 </template>
@@ -74,7 +78,7 @@ const columns = [
     { title: '系统', align: 'center', dataIndex: 'os', key: 'os', width: 100 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '修改时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
-    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
+    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 220 }
 ];
 const vmSaveModal = ref(false);
 const vmUpdateModal = ref(false);
