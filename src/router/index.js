@@ -58,6 +58,17 @@ const routes = [
         }
     },
     {
+        path: '/flowedge',
+        name: 'FlowEdge',
+        component: () => import('@/views/Flowedge/Flowedge.vue'),
+        meta: {
+            auth: true,
+            title: 'Edge列表',
+            icon: 'InstagramOutlined',
+            roles: ['Owner']
+        }
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import('@/views/NotFound/NotFound.vue'),

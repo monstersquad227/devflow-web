@@ -31,6 +31,10 @@
                     <span>发布机器</span>
                     <a-transfer :data-source="dataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px"></a-transfer>
                 </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center" v-if="formState.publish_type === 'flowedge'">
+                    <span>发布节点</span>
+                    <a-transfer :data-source="flowedgeDataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px"></a-transfer>
+                </div>
             </a-form>
         </a-modal>
     </a-config-provider>
@@ -42,6 +46,7 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { getEnvData, getNamespacesByEnv } from "@/http/setting";
 import { getVmByApplication } from "@/http/vm";
 import { getProjectTags } from "@/http/project";
+import {getFlowedgesByApplication} from "@/http/flowedge";
 
 const props = defineProps({
     project: Object
@@ -59,6 +64,7 @@ const envOptions = ref([]);
 const tagOptions = ref([]);
 const namespaceOptions = ref([]);
 const dataSource = ref([]);
+const flowedgeDataSource = ref([]);
 const radioChange = () => {
     if (formState.value.publish_type === 'docker') {
         getVmByApplication(props.project.deployment_name)
@@ -68,6 +74,14 @@ const radioChange = () => {
                     title: item["instance_name"] || item["public_ip"] || "",
                 }))
             });
+    } else if (formState.value.publish_type === 'flowedge') {
+        getFlowedgesByApplication(props.project.deployment_name)
+                .then((res) => {
+                    flowedgeDataSource.value = res.map(item => ({
+                        key: item["agent_id"],
+                        title: item["hostname"],
+                    }))
+                })
     }
 };
 const envSelectChange = () => {
