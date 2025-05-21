@@ -5,7 +5,12 @@
                 <a-table :data-source="buildDataSource" :columns="buildColumns" :pagination="buildPagination" :scroll="{ x: 1000 }" @change="buildOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'jenkins_id'">
-                            <a :href="`http://jenkins.chengdd.cn/job/${record.task_name}/${record.jenkins_id}/consoleText`" target="_blank" >{{ record.jenkins_id }}</a>
+                            <a-button type="link" @click="showDrawer(record.id)">
+                                {{ record.jenkins_id }}
+                            </a-button>
+                            <a-drawer size="large" width="80%" direction="rtl" :open="drawerSwitch" @close="drawerClose">
+                                <pre style="white-space: pre-wrap; font-family: monospace;" v-html="consoleText" />
+                            </a-drawer>
                         </template>
                     </template>
                 </a-table>
@@ -18,7 +23,6 @@
                 <a-table :data-source="dockerDataResource" :columns="dockerColumns" :pagination="dockerPagination" :scroll="{ x: 1500 }">
                 </a-table>
             </a-tab-pane>
-
             <a-tab-pane key="4" tab="Flowbox发布详情">
                 <a-table :data-source="flowboxDataSource" :columns="flowboxColumns" :pagination="flowboxPagination" :scroll="{ x: 1500 }">
                     <template #bodyCell="{ column, record }">
@@ -40,10 +44,25 @@
 import Layout from "@/components/Layout.vue";
 import { onMounted, ref } from "vue";
 import { useRoute } from 'vue-router';
-import { getProjectDetail } from "@/http/projectDetail";
+import {getProjectDetail, getProjectDetailText} from "@/http/projectDetail";
 
 const activeKey = ref("1");
 const route = useRoute();
+const drawerSwitch = ref(false);
+const consoleText = ref("");
+const showDrawer = (id) => {
+    getProjectDetailText(id).then(res => {
+        consoleText.value = res
+                .replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+                .replace(/(\[ERROR] )/g, '<span style="color: #e74c3c; font-weight: bold;">$1</span>')
+                .replace(/(ERROR:)/g, '<span style="color: #e74c3c; font-weight: bold;">$1</span>')
+
+    })
+    drawerSwitch.value = true;
+};
+const drawerClose = () => {
+    drawerSwitch.value = false;
+};
 
 const buildDataSource = ref([]);
 const buildColumns = ref([

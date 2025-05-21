@@ -11,14 +11,14 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a>创建</a>
+                        <a>指令</a>
                         <a-divider type="vertical" />
-                        <a>删除</a>
+                        <a>编辑</a>
                         <a-divider type="vertical" />
-                        <a>拉取</a>
-                        <a-divider type="vertical" />
-                        <a>启动</a>
-                        <a-divider type="vertical" />
+                        <a>详情</a>
+<!--                        <a-divider type="vertical" />-->
+<!--                        <a>启动</a>-->
+<!--                        <a-divider type="vertical" />-->
                     </span>
                 </template>
                 <template v-if="column.key === 'status'">
@@ -46,7 +46,7 @@ const columns = ref([
     { title: '心跳时间', align: 'center', dataIndex: 'last_heartbeat', key: 'last_heartbeat', width: 200 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
-    { title: '指令', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
+    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
 ]);
 const dataSource = ref([]);
 const pagination = ref({

@@ -9,3 +9,12 @@ export function getProjectDetail(id) {
 		successMessageText: '操作成功'
 	})
 }
+
+export function getProjectDetailText(id) {
+	return request({
+		url: `${DEVFLOW}/projects/build/details/${id}/text`,
+		method: 'get',
+	}, {
+		successMessageText: '操作成功'
+	})
+}
