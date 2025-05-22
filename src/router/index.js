@@ -69,6 +69,17 @@ const routes = [
         }
     },
     {
+        path: '/kong',
+        name: 'Kong',
+        component: () => import('@/views/Kong/Kong.vue'),
+        meta: {
+            auth: true,
+            title: 'Kong列表',
+            icon: 'InstagramOutlined',
+            roles: ['Owner']
+        }
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import('@/views/NotFound/NotFound.vue'),
