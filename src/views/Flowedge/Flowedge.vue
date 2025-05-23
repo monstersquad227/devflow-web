@@ -13,7 +13,7 @@
                     <span>
                         <a>指令</a>
                         <a-divider type="vertical" />
-                        <a>编辑</a>
+                        <a @click="showUpdateModal">编辑</a>
                         <a-divider type="vertical" />
                         <a>详情</a>
 <!--                        <a-divider type="vertical" />-->
@@ -29,6 +29,8 @@
                 </template>
             </template>
         </a-table>
+
+        <UpdateModal ref="flowedgeUpdateModal" />
     </Layout>
 </template>
 
@@ -37,6 +39,7 @@
 import Layout from "@/components/Layout.vue";
 import {onMounted, ref} from "vue";
 import {getFlowedges} from "@/http/flowedge";
+import UpdateModal from "@/views/Flowedge/components/UpdateModal.vue";
 
 const columns = ref([
     { title: '名称', align: 'center', dataIndex: 'agent_id', key: 'agent_id', width: 200, ellipsis: true },
@@ -56,6 +59,7 @@ const pagination = ref({
     showSizeChanger: false,
     size: 'medium'
 });
+const flowedgeUpdateModal = ref(false);
 
 const getData = () => {
     getFlowedges(pagination.value.current, pagination.value.pageSize)
@@ -85,6 +89,9 @@ const getFlowedgeStatus= (val) => {
             t = '离线'
     }
     return { s, t }
+};
+const showUpdateModal= () => {
+    flowedgeUpdateModal.value.visible = true;
 };
 
 onMounted(() => {
