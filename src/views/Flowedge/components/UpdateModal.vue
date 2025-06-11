@@ -17,12 +17,14 @@ import {ref, watchEffect} from "vue";
 import {getProjectsApplications} from "@/http/project";
 
 const visible = ref(false);
+const flowedgeID = ref("0");
 const formState = ref({
     application: ''
 });
 const applicationOptions = ref([]);
 
 const handleOk = () => {
+    console.log(formState.value.application);
     visible.value = false;
 };
 
@@ -38,6 +40,7 @@ watchEffect(() => {
 });
 defineExpose({
     visible,
+    flowedgeID
 });
 </script>
 

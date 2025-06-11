@@ -1,7 +1,7 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="发布项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
-            <a-form :model="formState" layout="horizontal" :wrapperCol="{ span: 20 }">
+        <a-modal v-model:open="visible" title="发布项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" :confirm-loading="confirmLoading">
+            <a-form :model="formState" layout="horizontal" :wrapperCol="{ span: 20 }" >
                 <a-form-item label="发布类型">
                     <a-radio-group v-model:value="formState.publish_type" @change="radioChange">
                         <a-radio value="kubernetes">Kubernetes</a-radio>
@@ -45,7 +45,7 @@ import { ref, defineProps, watchEffect } from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { getEnvData, getNamespacesByEnv } from "@/http/setting";
 import { getVmByApplication } from "@/http/vm";
-import { getProjectTags } from "@/http/project";
+import {deployProjects, getProjectTags} from "@/http/project";
 import {getFlowedgesByApplication} from "@/http/flowedge";
 
 const props = defineProps({
@@ -60,6 +60,7 @@ const formState = ref({
     ecs: []
 });
 const visible = ref(false);
+const confirmLoading = ref(false);
 const envOptions = ref([]);
 const tagOptions = ref([]);
 const namespaceOptions = ref([]);
@@ -127,8 +128,20 @@ const envSelectChange = () => {
     }
 };
 const handleOk = () => {
-    console.log("提交的构建数据：", formState.value);
-    visible.value = false;
+    confirmLoading.value = true;
+    const data = {
+        name: formState.value.deployment_name,
+        env: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
+        publish_type: formState.value.publish_type,
+        tag: formState.value.tag,
+        ecs: formState.value.ecs,
+    }
+    deployProjects(data, props.project.id)
+
+    setTimeout(() => {
+        confirmLoading.value = false;
+        visible.value = false;
+    }, 3000);
 };
 
 watchEffect(() => {

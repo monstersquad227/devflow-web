@@ -67,6 +67,16 @@ export function buildProjects(data, projectId) {
 	})
 }
 
+export function deployProjects(data, projectId) {
+	return request({
+		url: `${DEVFLOW}/projects/${projectId}/deploy`,
+		method: 'POST',
+		data
+	}, {
+		successMessageText: '操作成功'
+	})
+}
+
 export function getProjectsBuildStatus() {
 	return request({
 		url: `${DEVFLOW}/projects/build/status`,
@@ -80,7 +90,6 @@ export function getProjectsApplications() {
 		method: 'GET'
 	})
 }
-
 
 export function delProjects(id) {
 	return request({

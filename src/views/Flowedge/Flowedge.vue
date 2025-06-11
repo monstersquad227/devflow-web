@@ -46,6 +46,7 @@ const columns = ref([
     { title: '主机名', align: 'center', dataIndex: 'hostname', key: 'hostname', width: 200, ellipsis: true },
     { title: '状态', align: 'center', dataIndex: 'status', key: 'status', width: 80 },
     { title: '版本', align: 'center', dataIndex: 'version', key: 'version', width: 100 },
+    { title: '关联项目', align: 'center', dataIndex: 'application', key: 'application', width: 200 },
     { title: '心跳时间', align: 'center', dataIndex: 'last_heartbeat', key: 'last_heartbeat', width: 200 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
