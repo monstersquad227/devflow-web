@@ -15,16 +15,18 @@
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
 import {getProjectsApplications} from "@/http/project";
+import {patchFlowedgeApplication} from "@/http/flowedge";
 
 const visible = ref(false);
 const flowedgeID = ref("0");
+const application = ref("");
 const formState = ref({
     application: ''
 });
 const applicationOptions = ref([]);
 
 const handleOk = () => {
-    console.log(formState.value.application);
+    patchFlowedgeApplication(formState.value, flowedgeID.value)
     visible.value = false;
 };
 
@@ -36,10 +38,12 @@ watchEffect(() => {
                 value: item.deployment_name
             }));
         })
+        formState.value.application = application.value;
     }
 });
 defineExpose({
     visible,
+    application,
     flowedgeID
 });
 </script>

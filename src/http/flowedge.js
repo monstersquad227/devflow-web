@@ -23,3 +23,13 @@ export function getFlowedgesByApplication(application) {
 		method: 'GET'
 	})
 }
+
+export function patchFlowedgeApplication(data, agent_id) {
+	return request({
+		url: `${DEVFLOW}/flowedges/${agent_id}`,
+		method: 'PATCH',
+		data: data
+	}, {
+		successMessageText: '操作成功'
+	})
+}

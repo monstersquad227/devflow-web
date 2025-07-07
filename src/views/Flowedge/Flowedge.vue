@@ -13,7 +13,7 @@
                     <span>
                         <a>指令</a>
                         <a-divider type="vertical" />
-                        <a @click="showUpdateModal">编辑</a>
+                        <a @click="showUpdateModal(record)">编辑</a>
                         <a-divider type="vertical" />
                         <a>详情</a>
 <!--                        <a-divider type="vertical" />-->
@@ -30,7 +30,7 @@
             </template>
         </a-table>
 
-        <UpdateModal ref="flowedgeUpdateModal" />
+        <UpdateModal ref="flowedgeUpdateModal" :FlowedgeAgentID="flowedgeAgentId" />
     </Layout>
 </template>
 
@@ -61,6 +61,7 @@ const pagination = ref({
     size: 'medium'
 });
 const flowedgeUpdateModal = ref(false);
+const flowedgeAgentId = ref('');
 
 const getData = () => {
     getFlowedges(pagination.value.current, pagination.value.pageSize)
@@ -91,8 +92,10 @@ const getFlowedgeStatus= (val) => {
     }
     return { s, t }
 };
-const showUpdateModal= () => {
+const showUpdateModal= (record) => {
     flowedgeUpdateModal.value.visible = true;
+    flowedgeUpdateModal.value.application = record.application;
+    flowedgeUpdateModal.value.flowedgeID = record.agent_id;
 };
 
 onMounted(() => {
