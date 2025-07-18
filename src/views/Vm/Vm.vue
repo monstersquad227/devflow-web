@@ -25,6 +25,8 @@
                             <a-divider type="vertical" />
                         </template>
                         <a @click="showPasswordModal(record)">查看密码</a>
+                        <a-divider type="vertical" />
+                        <a @click="showAssignUserModal(record)">分配用户</a>
                     </span>
                 </template>
                 <template v-if="column.key === 'cloud_provider'">
@@ -46,6 +48,7 @@
 
         <SaveModal ref="vmSaveModal"/>
         <UpdateModal ref="vmUpdateModal" :vm="vmUpdateRecord"/>
+        <AssignUserModal ref="assignUserModal" />
     </Layout>
 </template>
 <script setup>
@@ -57,6 +60,7 @@ import SaveModal from "@/views/Vm/components/SaveModal.vue";
 import {Modal} from "ant-design-vue";
 import {Base64} from "js-base64";
 import UpdateModal from "@/views/Vm/components/UpdateModal.vue";
+import AssignUserModal from "@/views/Vm/components/AssignUserModal.vue";
 
 const pagination = ref({
     current: 1,
@@ -68,7 +72,7 @@ const pagination = ref({
 const dataSource = ref([]);
 const columns = [
     // { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 80 },
-    { title: '实例ID', align: 'center', dataIndex: 'instance_id', key: 'instance_id', width: 220 },
+    { title: '实例ID', align: 'center', dataIndex: 'instance_id', key: 'instance_id', width: 240 },
     { title: '实例名称', align: 'center', dataIndex: 'instance_name', key: 'instance_name', width: 180, ellipsis: true },
     { title: '平台', align: 'center', dataIndex: 'cloud_provider', key: 'cloud_provider', width: 80 },
     { title: '配置', align: 'center', dataIndex: 'spec', key: 'spec', width: 80 },
@@ -78,10 +82,11 @@ const columns = [
     { title: '系统', align: 'center', dataIndex: 'os', key: 'os', width: 100 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '修改时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
-    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 220 }
+    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 300 }
 ];
 const vmSaveModal = ref(false);
 const vmUpdateModal = ref(false);
+const assignUserModal = ref(false);
 const vmUpdateRecord = ref(null);
 const getColorByCloud_provider = (value) => {
     switch (value) {
@@ -185,8 +190,12 @@ const showUpdateModal = (record) => {
     vmUpdateRecord.value = record;
     vmUpdateModal.value.visible = true;
 };
-const getData = () => {
-    getVmData(pagination.value.current, pagination.value.pageSize)
+const showAssignUserModal = (record) => {
+    assignUserModal.value.visible = true;
+    assignUserModal.value.vmId = record.id;
+}
+const getData = async () => {
+    await getVmData(pagination.value.current, pagination.value.pageSize)
         .then(res => {
             const { data, total } = res
             dataSource.value = data || []
@@ -204,7 +213,7 @@ const refresh = () => {
     onPaginationChange({ current: 1, pageSize: 10})
 };
 
-onMounted(() => {
+onMounted( () => {
     getData()
 });
 

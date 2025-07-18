@@ -58,3 +58,10 @@ export function getVmByApplication(application) {
 		method: 'GET'
 	})
 }
+
+export function getUsersByVm(vmId) {
+	return request({
+		url: `${DEVFLOW}/vms/${vmId}/users`,
+		method: 'GET'
+	})
+}

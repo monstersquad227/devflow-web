@@ -17,3 +17,10 @@ export const login = (account, password) => {
 		}
 	)
 }
+
+export const getUsers= () => {
+	return request({
+		url: DEVFLOW + '/users',
+		method: 'get'
+	})
+}
