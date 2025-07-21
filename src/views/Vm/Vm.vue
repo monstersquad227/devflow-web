@@ -35,7 +35,7 @@
                 <template v-if="column.key === 'region'">
                     {{ getRegionText(record.region) }}
                 </template>
-                <template v-else-if="column.key === 'spec'">
+                <template v-if="column.key === 'spec'">
                     <a-tooltip :title="getSpecDescribe(record.spec)">
                         <a-tag :color="getColorBySpec(record.spec)">{{ getSpecText(record.spec) }}</a-tag>
                     </a-tooltip>

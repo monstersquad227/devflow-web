@@ -6,7 +6,7 @@
                     <a-select mode="multiple" @popupScroll="popupScroll" v-model:value="formState.users" placeholder="请选择用户" :options="userOptions"/>
                 </a-form-item>
             </a-form>
-        </a-modal>>
+        </a-modal>
     </a-config-provider>
 </template>
 
