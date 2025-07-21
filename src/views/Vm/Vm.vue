@@ -12,7 +12,7 @@
                 </template>
             刷新</a-button>
         </div>
-        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 1800}" @change="onPaginationChange" >
+        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 2000}" @change="onPaginationChange" >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
@@ -156,13 +156,6 @@ const getSpecDescribe = (value) => {
         default: return value;
     }
 };
-// const getColorByOs = (value) => {
-//     switch (value) {
-//         case 'centos': return '#932279';
-//         case 'win': return '#3B82F6';
-//         default: return '#6B7280';
-//     }
-// };
 const showDeleteVmModal = (record) => {
     Modal.confirm({
         title: record.instance_id+' 确定删除吗?',

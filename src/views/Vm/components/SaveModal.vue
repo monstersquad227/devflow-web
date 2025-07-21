@@ -125,9 +125,9 @@ const osOptions = ref([
     // { label: 'Debian', value: 'debian' }
 ]);
 const handleOk = () => {
-    formRef.value.validate().then(()=> {
+    formRef.value.validate().then(async()=> {
         formState.value.password = Base64.encode(formState.value.password);
-        postSaveVmData(formState.value)
+        await postSaveVmData(formState.value)
         visible.value = false;
     })
 };

@@ -87,8 +87,8 @@ const osOptions = ref([
 const props = defineProps({
     vm: Object,
 });
-const handleOk = () => {
-    updateVmData(formState.value)
+const handleOk = async () => {
+    await updateVmData(formState.value)
     visible.value = false;
 };
 

@@ -65,3 +65,13 @@ export function getUsersByVm(vmId) {
 		method: 'GET'
 	})
 }
+
+export function postUsersByUser(vmId, data) {
+	return request({
+		url: `${DEVFLOW}/vms/${vmId}/users`,
+		method: 'POST',
+		data: data
+	}, {
+		successMessageText: '操作成功'
+	})
+}

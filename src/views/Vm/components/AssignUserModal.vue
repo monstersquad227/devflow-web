@@ -1,7 +1,7 @@
 <template>
     <a-config-provider :locale="zhCN">
         <a-modal v-model:open="visible" title="分配用户" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
-            <a-form :model="formState" layout="horizontal" :labelCol="{ style: { width: '80px' } }" :wrapperCol="{ span: 20 }">
+            <a-form :model="formState" layout="horizontal" :labelCol="{ style: { width: '50px' } }" :wrapperCol="{ span: 20 }">
                 <a-form-item label="用户">
                     <a-select mode="multiple" @popupScroll="popupScroll" v-model:value="formState.users" placeholder="请选择用户" :options="userOptions"/>
                 </a-form-item>
@@ -15,7 +15,7 @@
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
 import {getUsers} from "@/http/base";
-import {getUsersByVm} from "@/http/vm";
+import {getUsersByVm, postUsersByUser} from "@/http/vm";
 
 const visible = ref(false);
 const vmId = ref(0);
@@ -27,9 +27,15 @@ const popupScroll = () => {
     console.log('popupScroll');
 };
 
-const handleOk = () => {
-    console.log(visible.value);
+const handleOk = async () => {
+    const body = Array.isArray(formState.value.users)
+            ? formState.value.users.map((u) => (typeof u === 'object' ? u.value : u))
+            : []
+    await postUsersByUser(vmId.value, { users: body });
+    visible.value = false;
+    // console.log('机器：', vmId.value+ "最终的用户 ID 列表:", body,)
 }
+
 watchEffect(async () => {
     if (visible.value && vmId.value !== undefined) {
         const res = await getUsers()
