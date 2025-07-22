@@ -11,6 +11,7 @@
                     <ReloadOutlined />
                 </template>
             刷新</a-button>
+            <a-input-search style="width: 200px" placeholder="内网IP、实例ID和名称" />
         </div>
         <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 2000}" @change="onPaginationChange" >
             <template #bodyCell="{ column, record }">
@@ -40,9 +41,6 @@
                         <a-tag :color="getColorBySpec(record.spec)">{{ getSpecText(record.spec) }}</a-tag>
                     </a-tooltip>
                 </template>
-<!--                <template v-if="column.key === 'os'">-->
-<!--                    <a-tag :color="getColorByOs(record.os)">{{ record.os }}</a-tag>-->
-<!--                </template>-->
             </template>
         </a-table>
 
