@@ -15,26 +15,26 @@
                     </template>
                 </a-table>
             </a-tab-pane>
-            <a-tab-pane key="2" tab="K8s发布详情">
-                <a-table :data-source="kubernetesDataResource" :columns="kubernetesColumns" :pagination="kubernetesPagination" :scroll="{ x: 1000 }">
-                </a-table>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="Docker发布详情">
-                <a-table :data-source="dockerDataResource" :columns="dockerColumns" :pagination="dockerPagination" :scroll="{ x: 1500 }">
-                </a-table>
-            </a-tab-pane>
-            <a-tab-pane key="4" tab="Flowbox发布详情">
-                <a-table :data-source="flowboxDataSource" :columns="flowboxColumns" :pagination="flowboxPagination" :scroll="{ x: 1500 }">
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'resource'">
-                            <a-switch v-model:checked="record.resource" :disabled="true" :checked-children="translateSwitch(record.resource)" :un-checked-children="translateSwitch(record.resource)" />
-                        </template>
-                        <template v-if="column.key === 'hpa'">
-                            <a-switch v-model:checked="record.hpa" :disabled="true" :checked-children="translateSwitch(record.hpa)" :un-checked-children="translateSwitch(record.hpa)" />
-                        </template>
-                    </template>
-                </a-table>
-            </a-tab-pane>
+<!--            <a-tab-pane key="2" tab="K8s发布详情">-->
+<!--                <a-table :data-source="kubernetesDataResource" :columns="kubernetesColumns" :pagination="kubernetesPagination" :scroll="{ x: 1000 }">-->
+<!--                </a-table>-->
+<!--            </a-tab-pane>-->
+<!--            <a-tab-pane key="3" tab="Docker发布详情">-->
+<!--                <a-table :data-source="dockerDataResource" :columns="dockerColumns" :pagination="dockerPagination" :scroll="{ x: 1500 }">-->
+<!--                </a-table>-->
+<!--            </a-tab-pane>-->
+<!--            <a-tab-pane key="4" tab="Flowbox发布详情">-->
+<!--                <a-table :data-source="flowboxDataSource" :columns="flowboxColumns" :pagination="flowboxPagination" :scroll="{ x: 1500 }">-->
+<!--                    <template #bodyCell="{ column, record }">-->
+<!--                        <template v-if="column.key === 'resource'">-->
+<!--                            <a-switch v-model:checked="record.resource" :disabled="true" :checked-children="translateSwitch(record.resource)" :un-checked-children="translateSwitch(record.resource)" />-->
+<!--                        </template>-->
+<!--                        <template v-if="column.key === 'hpa'">-->
+<!--                            <a-switch v-model:checked="record.hpa" :disabled="true" :checked-children="translateSwitch(record.hpa)" :un-checked-children="translateSwitch(record.hpa)" />-->
+<!--                        </template>-->
+<!--                    </template>-->
+<!--                </a-table>-->
+<!--            </a-tab-pane>-->
         </a-tabs>
     </Layout>
 </template>
