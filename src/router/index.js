@@ -12,7 +12,8 @@ const routes = [
         name: 'Dashboard',
         component: ()=> import('@/views/Dashboard/Dashboard.vue'),
         meta: {
-            auth: true
+            auth: true,
+            hideInMenu: true,
         }
     },
     {
@@ -66,6 +67,17 @@ const routes = [
             title: 'Edge列表',
             icon: 'InstagramOutlined',
             roles: ['Owner']
+        }
+    },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('@/views/Profile/Profile.vue'),
+        meta: {
+            auth: true,
+            title: '个人中心',
+            hideInMenu: true,
+            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
         }
     },
     {

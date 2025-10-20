@@ -22,7 +22,13 @@
                             </a>
                             <template #overlay>
                                 <a-menu>
-                                    <a-menu-item @click="logout()">退出登录</a-menu-item>
+                                    <a-menu-item @click="goToProfile()">
+                                        <UserOutlined /> 个人中心
+                                    </a-menu-item>
+                                    <a-menu-divider />
+                                    <a-menu-item @click="logout()">
+                                        <LogoutOutlined /> 退出登录
+                                    </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
@@ -67,7 +73,8 @@ watchEffect(() => {
 */
 const menuRoutes = computed(() =>
     router.options.routes
-        .filter(route => route.meta?.title)  // 只保留有 title 的菜单项
+        .filter(route => route.meta?.title)
+        .filter(route => !route.meta?.hideInMenu)
         .filter(route => {
             const roles = store.getters.roles; // 获取当前用户角色
             return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
@@ -79,6 +86,9 @@ const handleClick = (info) => {
 }
 const handleLogo = () => {
     router.push('/')
+}
+const goToProfile = () => {
+    router.push('/profile')
 }
 const logout = () => {
     store.dispatch('clearUserInfo')
