@@ -1,118 +1,150 @@
 <template>
-    <a-layout id="components-layout-demo-custom-trigger">
-        <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-            <div class="logo" @click="handleLogo"/>
-            <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="handleClick">
+    <a-layout class="layout-container">
+        <!-- 侧边栏 -->
+        <a-layout-sider
+                v-model:collapsed="collapsed"
+                :trigger="null"
+                collapsible
+        >
+            <div class="logo" @click="handleLogo" />
+
+            <a-menu
+                    v-model:selectedKeys="selectedKeys"
+                    theme="dark"
+                    mode="inline"
+                    @click="handleClick"
+            >
                 <a-menu-item v-for="route in menuRoutes" :key="route.path">
                     <component :is="route.meta.icon" />
                     <span>{{ route.meta.title }}</span>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
+
+        <!-- 右侧布局 -->
         <a-layout>
-            <a-layout-header style="background: #fff; padding: 0">
-                    <MenuUnfoldOutlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)"/>
-                    <MenuFoldOutlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-                    <div :style="{ display: 'inline-block', float: 'right', margin: '0 30px 0 0' }">
-                        <img class="avatar" src="@/assets/avatar.png" alt="avatar" />
-                        <a-dropdown>
-                            <a class="ant-dropdown-link" @click.prevent>
-                                {{ accountName }}
-                                <DownOutlined />
-                            </a>
-                            <template #overlay>
-                                <a-menu>
-                                    <a-menu-item @click="goToProfile()">
-                                        <UserOutlined /> 个人中心
-                                    </a-menu-item>
-                                    <a-menu-divider />
-                                    <a-menu-item @click="logout()">
-                                        <LogoutOutlined /> 退出登录
-                                    </a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
-                    </div>
+            <!-- 头部 -->
+            <a-layout-header class="layout-header">
+                <!-- 左侧折叠按钮 -->
+                <MenuUnfoldOutlined
+                        v-if="collapsed"
+                        class="trigger"
+                        @click="() => (collapsed = !collapsed)"
+                />
+                <MenuFoldOutlined
+                        v-else
+                        class="trigger"
+                        @click="() => (collapsed = !collapsed)"
+                />
+
+                <!-- 右侧用户信息 -->
+                <div class="user-info">
+                    <img class="avatar" src="@/assets/avatar.png" alt="avatar" />
+
+                    <a-dropdown>
+                        <a class="ant-dropdown-link" @click.prevent>
+                            {{ accountName }}
+                            <DownOutlined />
+                        </a>
+                        <template #overlay>
+                            <a-menu>
+                                <a-menu-item @click="goToProfile()">
+                                    <UserOutlined /> 个人中心
+                                </a-menu-item>
+                                <a-menu-divider />
+                                <a-menu-item @click="logout()">
+                                    <LogoutOutlined /> 退出登录
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+                </div>
             </a-layout-header>
 
             <!-- 正文主区域 -->
-            <a-layout-content
-                :style="{ margin: '24px 16px', padding: '24px', background: '#fff', overflow: 'scroll' }"
-            >
+            <a-layout-content class="layout-content">
                 <slot></slot>
             </a-layout-content>
-
         </a-layout>
     </a-layout>
 </template>
 
 <script setup>
-
-import {computed, ref, watchEffect} from 'vue';
-import { useRouter, useRoute } from "vue-router";
-import store from "../store";
+import { computed, ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+import store from '@/store';
 
 const router = useRouter();
-const route = useRoute();
 const selectedKeys = ref(['']);
 const collapsed = ref(false);
 
 const userInfo = computed(() => store.getters.userInfo);
-const accountName = userInfo.value.user.name
+const accountName = userInfo.value.user.name;
 
 watchEffect(() => {
     selectedKeys.value = [router.currentRoute.value.path];
 });
 
-/*
-// const menuRoutes = computed(() =>
-//     router.options.routes.filter(route => route.meta?.title).map(route => ({
-//         ...route,
-//     }))
-// );
-*/
 const menuRoutes = computed(() =>
-    router.options.routes
-        .filter(route => route.meta?.title)
-        .filter(route => !route.meta?.hideInMenu)
-        .filter(route => {
-            const roles = store.getters.roles; // 获取当前用户角色
-            return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
-        })
+        router.options.routes
+                .filter(route => route.meta?.title)
+                .filter(route => !route.meta?.hideInMenu)
+                .filter(route => {
+                    const roles = store.getters.roles;
+                    return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
+                })
 );
 
 const handleClick = (info) => {
     router.push(info.key);
-}
+};
+
 const handleLogo = () => {
-    router.push('/')
-}
-const goToProfile = () => {
-    router.push('/profile')
-}
-const logout = () => {
-    store.dispatch('clearUserInfo')
-    router.push('/login')
-}
-
-/*
-function handleLogo() {
     router.push('/');
-}
-function logout() {
-    store.dispatch('clearUserInfo')
-    router.push('/login')
-}
- */
+};
 
+const goToProfile = () => {
+    router.push('/profile');
+};
+
+const logout = () => {
+    store.dispatch('clearUserInfo');
+    router.push('/login');
+};
 </script>
 
-<style>
-html, body, #app, #components-layout-demo-custom-trigger {
+<style scoped>
+/* 基础布局 */
+html,
+body,
+#app,
+.layout-container {
     height: 100%;
     margin: 0;
 }
-#components-layout-demo-custom-trigger .trigger {
+
+.layout-container {
+    height: 100vh;
+}
+
+/* Logo */
+.logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 16px;
+    cursor: pointer;
+}
+
+/* 头部 */
+.layout-header {
+    background: #fff;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.trigger {
     font-size: 18px;
     line-height: 64px;
     padding: 0 24px;
@@ -120,24 +152,33 @@ html, body, #app, #components-layout-demo-custom-trigger {
     transition: color 0.3s;
 }
 
-#components-layout-demo-custom-trigger .trigger:hover {
+.trigger:hover {
     color: #1890ff;
 }
 
-#components-layout-demo-custom-trigger .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.3);
-    margin: 16px;
+/* 用户信息区域 */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
 }
+
 .avatar {
     height: 32px;
-    background: rgba(255, 255, 255, 0.3);
-    margin: 10px;
+    width: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-.site-layout .site-layout-background {
-    height: 100%;
+.ant-dropdown-link {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+/* 主内容区域 */
+.layout-content {
+    margin: 24px 16px;
+    padding: 24px;
     background: #fff;
+    overflow: auto;
 }
 </style>
-
