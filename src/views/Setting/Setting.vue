@@ -111,6 +111,7 @@ const envColumns = ref([
     { title: '环境名', align: 'center', dataIndex: 'name', key: 'name', width: 80 },
     { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150 },
     { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
+    { title: '备注', align: 'center', dataIndex: 'remark', key: 'remark', width: 200 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
     { title: '操作', align: 'center', key: 'action', fixed: 'right', width: 150 }
