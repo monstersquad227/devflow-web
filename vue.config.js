@@ -4,9 +4,9 @@ module.exports = defineConfig({
         port: 3000,
         proxy: {
             '^/devflow': {
-                // target: 'http://192.168.1.87:8080',
+                target: 'http://127.0.0.1:8080',
                 // target: 'http://192.168.1.198:8000/',
-                target: 'http://180.169.11.178:42395',
+                // target: 'http://180.169.11.178:42395',
                 changeOrigin: true,
             }
         },
