@@ -30,7 +30,7 @@
             </template>
         </a-table>
 
-        <UpdateModal ref="flowedgeUpdateModal" :FlowedgeAgentID="flowedgeAgentId" />
+        <UpdateModal ref="flowedgeUpdateModal" :FlowedgeAgentID="flowedgeAgentId" @success="getData"/>
     </Layout>
 </template>
 

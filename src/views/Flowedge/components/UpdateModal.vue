@@ -17,6 +17,7 @@ import {ref, watchEffect} from "vue";
 import {getProjectsApplications} from "@/http/project";
 import {patchFlowedgeApplication} from "@/http/flowedge";
 
+const emit = defineEmits(["success"]);
 const visible = ref(false);
 const flowedgeID = ref("0");
 const application = ref("");
@@ -25,8 +26,9 @@ const formState = ref({
 });
 const applicationOptions = ref([]);
 
-const handleOk = () => {
-    patchFlowedgeApplication(formState.value, flowedgeID.value)
+const handleOk = async () => {
+    await patchFlowedgeApplication(formState.value, flowedgeID.value)
+    emit("success")
     visible.value = false;
 };
 
