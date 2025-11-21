@@ -16,6 +16,7 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
 import {updateImage} from "@/http/setting";
 
+const emit = defineEmits(["success"]);
 const visible = ref(false);
 const props = defineProps({
     image: Object
@@ -24,10 +25,14 @@ const formState = ref({
     id: null,
     name: ''
 });
-const handleOk = () => {
-    updateImage(formState.value.id, formState.value);
-    console.log(formState.value);
-    visible.value = false;
+const handleOk = async () => {
+    try {
+        await updateImage(formState.value.id, formState.value);
+        emit("success");
+        visible.value = false;
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 watchEffect(() => {

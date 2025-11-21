@@ -5,6 +5,9 @@
                 <a-form-item label="环境名">
                     <a-input v-model:value="formState.name" placeholder="请输入环境名"/>
                 </a-form-item>
+                <a-form-item label="备注">
+                    <a-input v-model:value="formState.remark" placeholder="请输入备注"/>
+                </a-form-item>
             </a-form>
         </a-modal>
     </a-config-provider>
@@ -16,16 +19,20 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { ref, watchEffect } from "vue";
 import { updateEnv } from "@/http/setting";
 
+const emit = defineEmits(['success']);
+
 const visible = ref(false);
 const props = defineProps({
     env: Object,
 });
 const formState = ref({
     id: null,
-    name: ''
+    name: '',
+    remark: '',
 });
-const handleOk = () => {
-    updateEnv(formState.value.id, formState.value)
+const handleOk = async () => {
+    await updateEnv(formState.value.id, formState.value)
+    emit('success')
     visible.value = false;
 };
 
@@ -33,6 +40,7 @@ watchEffect(() => {
     if (props.env) {
         formState.value.id = props.env.id;
         formState.value.name = props.env.name;
+        formState.value.remark = props.env.remark;
     }
 });
 

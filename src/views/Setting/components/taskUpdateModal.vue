@@ -19,6 +19,7 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {ref, watchEffect} from "vue";
 import {getImageData, updateTask} from "@/http/setting";
 
+const emit = defineEmits(["success"]);
 const visible = ref(false);
 const props = defineProps({
     task: Object,
@@ -29,10 +30,14 @@ const formState = ref({
     image_id: ''
 });
 const imageOptions = ref([]);
-const handleOk = () => {
-    updateTask(formState.value.id, formState.value)
-    console.log(formState.value);
-    visible.value = false;
+const handleOk = async () => {
+    try {
+        await updateTask(formState.value.id, formState.value)
+        emit("success")
+        visible.value = false;
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 watchEffect(() => {

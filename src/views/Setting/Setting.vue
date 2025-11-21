@@ -12,7 +12,7 @@
                     <a-button type="primary" @click="showEnvSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="envRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
-                <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 1500 }" :pagination="envPagination" @change="envOnPaginationChange" >
+                <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 'max-content' }" :pagination="envPagination" @change="envOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
@@ -35,7 +35,7 @@
                     <a-button type="primary" @click="showSaveImageModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="imageRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
-                <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 1500 }" :pagination="imagePagination" @change="imageOnPaginationChange" >
+                <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 'max-content' }" :pagination="imagePagination" @change="imageOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
@@ -58,7 +58,7 @@
                     <a-button type="primary" @click="showTaskSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="taskRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
-                <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 1500 }" :pagination="taskPagination" @change="taskOnPaginationChange" >
+                <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 'max-content' }" :pagination="taskPagination" @change="taskOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
@@ -71,12 +71,12 @@
                 </a-table>
             </a-tab-pane>
         </a-tabs>
-        <EnvSaveModal ref="envSaveModal" />
-        <EnvUpdateModal ref="envUpdateModal" :env="envUpdateRecord" />
-        <ImageSaveModal ref="imageSaveModal" />
-        <ImageUpdateModal ref="imageUpdateModal" :image="imageUpdateRecord" />
-        <TaskSaveModal ref="taskSaveModal" />
-        <TaskUpdateModal ref="taskUpdateModal" :task="taskUpdateRecord" />
+        <EnvSaveModal ref="envSaveModal" @success="getEnvsData" />
+        <EnvUpdateModal ref="envUpdateModal" :env="envUpdateRecord" @success="getEnvsData" />
+        <ImageSaveModal ref="imageSaveModal" @success="getImagesData" />
+        <ImageUpdateModal ref="imageUpdateModal" :image="imageUpdateRecord" @success="getImagesData"/>
+        <TaskSaveModal ref="taskSaveModal" @success="getTasksData" />
+        <TaskUpdateModal ref="taskUpdateModal" :task="taskUpdateRecord" @success="getTasksData" />
     </Layout>
 </template>
 
@@ -109,11 +109,11 @@ const envDataSource = ref([]);
 const envColumns = ref([
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
     { title: '环境名', align: 'center', dataIndex: 'name', key: 'name', width: 80 },
-    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150 },
-    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
-    { title: '备注', align: 'center', dataIndex: 'remark', key: 'remark', width: 200 },
-    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
-    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
+    { title: '备注', align: 'center', dataIndex: 'remark', key: 'remark', width: 100 },
+    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 120 },
+    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 120 },
+    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 150 },
+    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 150 },
     { title: '操作', align: 'center', key: 'action', fixed: 'right', width: 150 }
 ]);
 const envPagination = ref({
@@ -132,8 +132,9 @@ const showEnvSaveModal = () => {
 const showDeleteEnvConfirm = (record) => {
     Modal.confirm({
         title: record.name + ' 确定删除吗？',
-        onOk() {
-            deleteEnv(record.id)
+        async onOk() {
+            await deleteEnv(record.id);
+            getEnvsData();
         }
     })
 };
@@ -163,10 +164,10 @@ const imageDataSource = ref([]);
 const imageColumns = ref([
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
     { title: '名称', align: 'center', dataIndex: 'name', key: 'name', width: 400},
-    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150},
-    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
-    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
-    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200},
+    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 120},
+    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 120 },
+    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 150 },
+    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 150},
     { title: '操作', align: 'center', key: 'action', fixed: 'right', width: 150 }
 ]);
 const imagePagination = ref({
@@ -201,8 +202,9 @@ const showSaveImageModal = () => {
 const showDeleteImageConfirm = (record) => {
     Modal.confirm({
         title: record.name + ' 确定删除吗？',
-        onOk() {
-            deleteImage(record.id)
+        async onOk() {
+            await deleteImage(record.id);
+            getImagesData()
         }
     })
 };
@@ -217,10 +219,10 @@ const taskColumns = ref([
     { title: '#', align: 'center', dataIndex: 'id', key: 'id', width: 60 },
     { title: '名称', align: 'center', dataIndex: 'name', key: 'name', width: 200 },
     { title: '镜像ID', align: 'center', dataIndex: 'image_id', key: 'image_id', width: 100 },
-    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 150 },
-    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 150 },
-    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
-    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
+    { title: '创建人', align: 'center', dataIndex: 'created_by', key: 'created_by', width: 120 },
+    { title: '更新人', align: 'center', dataIndex: 'updated_by', key: 'updated_by', width: 120 },
+    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 150 },
+    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 150 },
     { title: '操作', align: 'center', key: 'action', fixed: 'right', width: 150 }
 ]);
 const taskPagination = ref({
@@ -255,8 +257,9 @@ const showTaskSaveModal = () => {
 const showTaskDeleteModal = (record) => {
     Modal.confirm({
         title: record.name + ' 确定删除吗？',
-        onOk() {
-            deleteTask(record.id)
+        async onOk() {
+            await deleteTask(record.id);
+            getTasksData()
         }
     })
 };
