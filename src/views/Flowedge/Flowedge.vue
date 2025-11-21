@@ -63,20 +63,20 @@ const pagination = ref({
 const flowedgeUpdateModal = ref(false);
 const flowedgeAgentId = ref('');
 
-const getData = () => {
-    getFlowedges(pagination.value.current, pagination.value.pageSize)
+const getData = async () => {
+    await getFlowedges(pagination.value.current, pagination.value.pageSize)
             .then(res => {
                 const { data, total } = res
                 dataSource.value = data || []
                 pagination.value.total = total || 0
             })
 };
-const refresh = () => {
-    onPaginationChange({ current: 1, pageSize: 10})
+const refresh = async () => {
+    await getData();
 };
-const onPaginationChange = ({ current }) => {
+const onPaginationChange = async ({ current }) => {
     pagination.value.current = current
-    getData()
+    await getData()
 };
 const getFlowedgeStatus= (val) => {
     let s = ''
@@ -98,8 +98,8 @@ const showUpdateModal= (record) => {
     flowedgeUpdateModal.value.flowedgeID = record.agent_id;
 };
 
-onMounted(() => {
-    getData()
+onMounted(async () => {
+    await getData()
 });
 </script>
 

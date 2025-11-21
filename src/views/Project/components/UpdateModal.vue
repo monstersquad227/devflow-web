@@ -51,6 +51,7 @@ import {getTaskData} from "@/http/setting";
 import {updateProjects} from "@/http/project";
 import {message} from "ant-design-vue";
 
+const emit = defineEmits(["success"]);
 const visible = ref(false);
 const props = defineProps({
     project: Object,
@@ -67,14 +68,14 @@ const formState = ref({
     project_package_name: '',
     description: ''
 });
-const handleOk = () => {
-    updateProjects(formState.value.id, formState.value)
+const handleOk = async () => {
+    await updateProjects(formState.value.id, formState.value)
             .then((res) => {
                 if (res.rowsAffected > 1 ) {
                     message.error("脏数据")
                 }
             })
-    console.log(formState.value);
+    emit("success");
     visible.value = false;
 };
 

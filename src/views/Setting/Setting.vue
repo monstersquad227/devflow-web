@@ -134,7 +134,11 @@ const showDeleteEnvConfirm = (record) => {
         title: record.name + ' 确定删除吗？',
         async onOk() {
             await deleteEnv(record.id);
-            getEnvsData();
+            await getEnvsData();
+            if (envDataSource.value.length === 0 && envPagination.value.current > 1) {
+                envPagination.value.current--;
+                await getEnvsData();
+            }
         }
     })
 };
@@ -142,8 +146,8 @@ const showUpdateEnvModal = (record) => {
     envUpdateModal.value.visible = true;
     envUpdateRecord.value = record;
 };
-const getEnvsData = () => {
-    getEnvData(envPagination.value.current, envPagination.value.pageSize)
+const getEnvsData = async () => {
+    await getEnvData(envPagination.value.current, envPagination.value.pageSize)
             .then((res) => {
                 const { data, total } = res
                 envDataSource.value = data || []
@@ -155,7 +159,7 @@ const envOnPaginationChange = ({current}) => {
     getEnvsData()
 };
 const envRefresh = () => {
-    envOnPaginationChange({current: 1, pageSize: 10})
+    getEnvsData();
     message.success('操作成功');
 };
 
@@ -180,21 +184,21 @@ const imagePagination = ref({
 const imageSaveModal = ref(false);
 const imageUpdateModal = ref(false);
 const imageUpdateRecord = ref(null);
-const getImagesData = () => {
-    getImageData(imagePagination.value.current, imagePagination.value.pageSize)
+const getImagesData = async () => {
+    await getImageData(imagePagination.value.current, imagePagination.value.pageSize)
             .then((res) => {
                 const { data, total } = res
                 imageDataSource.value = data
                 imagePagination.value.total = total
             })
 };
-const imageOnPaginationChange = ({ current }) => {
-    imagePagination.value.current = current
-    getImagesData()
+const imageOnPaginationChange = async ({ current }) => {
+    imagePagination.value.current = current;
+    await getImagesData();
 };
-const imageRefresh = () => {
-    imageOnPaginationChange({current: 1, pageSize: 10})
-    message.success('操作成功')
+const imageRefresh = async () => {
+    await getImagesData();
+    message.success('操作成功');
 };
 const showSaveImageModal = () => {
     imageSaveModal.value.visible = true;
@@ -204,7 +208,11 @@ const showDeleteImageConfirm = (record) => {
         title: record.name + ' 确定删除吗？',
         async onOk() {
             await deleteImage(record.id);
-            getImagesData()
+            await getImagesData()
+            if (imageDataSource.value.length === 0 && imagePagination.value.current > 1) {
+                imagePagination.value.current--;
+                await getImagesData();
+            }
         }
     })
 };
@@ -235,20 +243,20 @@ const taskPagination = ref({
 const taskSaveModal = ref(false);
 const taskUpdateRecord = ref(null);
 const taskUpdateModal = ref(false);
-const getTasksData = () => {
-    getTaskData(taskPagination.value.current, taskPagination.value.pageSize)
+const getTasksData = async () => {
+    await getTaskData(taskPagination.value.current, taskPagination.value.pageSize)
             .then((res) => {
                 const { data, total } = res
                 taskDataSource.value = data
                 taskPagination.value.total = total
             })
 };
-const taskOnPaginationChange = ({ current }) => {
-    taskPagination.value.current = current
-    getTasksData()
+const taskOnPaginationChange = async ({ current }) => {
+    taskPagination.value.current = current;
+    await getTasksData();
 };
-const taskRefresh = () => {
-    taskOnPaginationChange({current: 1, pageSize: 10})
+const taskRefresh = async () => {
+    await getTasksData();
     message.success('操作成功')
 };
 const showTaskSaveModal = () => {
@@ -259,7 +267,11 @@ const showTaskDeleteModal = (record) => {
         title: record.name + ' 确定删除吗？',
         async onOk() {
             await deleteTask(record.id);
-            getTasksData()
+            await getTasksData();
+            if (taskDataSource.value.length === 0 && taskPagination.value.current > 1) {
+                taskPagination.value.current--;
+                await getTasksData();
+            }
         }
     })
 };

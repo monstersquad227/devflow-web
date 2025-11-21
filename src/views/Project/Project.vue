@@ -37,10 +37,10 @@
             </template>
         </a-table>
 
-        <SaveModal ref="projectSaveModal" />
+        <SaveModal ref="projectSaveModal" @success="getProject"/>
         <BuildModal ref="projectBuildModal" :project="projectBuildRecord" />
         <DeployModal ref="projectDeployModal" :project="projectDeployRecord"/>
-        <UpdateModal ref="projectUpdateModal" :project="projectUpdateRecord"/>
+        <UpdateModal ref="projectUpdateModal" :project="projectUpdateRecord" @success="getProject"/>
     </Layout>
 </template>
 
@@ -89,8 +89,13 @@ const projectBuildStatusIntervalId = ref(null);
 const showDeleteProjectModal = (record) => {
     Modal.confirm({
         title: record.gitlab_name+' 确定删除该项目吗？',
-        onOk() {
-            delProjects(record.id)
+        async onOk() {
+            await delProjects(record.id)
+            await getProject();
+            if (dataSource.value.length === 0 && pagination.value.current > 1) {
+                pagination.value.current--;
+                await getProject();
+            }
         },
     })
 };
@@ -98,8 +103,8 @@ const showUpdateModal = (record) => {
     projectUpdateModal.value.visible = true;
     projectUpdateRecord.value = record;
 };
-const getProject = () => {
-    getProjects(pagination.value.current, pagination.value.pageSize)
+const getProject = async () => {
+    await getProjects(pagination.value.current, pagination.value.pageSize)
         .then((res) => {
             const { data, total } = res
             dataSource.value = data
@@ -110,8 +115,8 @@ const onPaginationChange = ({ current }) => {
     pagination.value.current = current
     getProject()
 };
-const refresh = () => {
-    onPaginationChange({current: 1, pageSize: 10})
+const refresh = async () => {
+    await getProject();
 };
 const showSaveModal = () => {
     projectSaveModal.value.visible = true;

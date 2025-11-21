@@ -157,9 +157,12 @@ const getSpecDescribe = (value) => {
 const showDeleteVmModal = (record) => {
     Modal.confirm({
         title: record.instance_id+' 确定删除吗?',
-        onOk() {
-            delVmData(record.id)
-            console.log('OK');
+        async onOk() {
+            await delVmData(record.id)
+            if (dataSource.value.length === 0 && pagination.value.current > 1) {
+                pagination.value.current--;
+                await getData();
+            }
         },
     })
 };
@@ -200,8 +203,8 @@ const onPaginationChange = ({ current }) => {
 const showSaveModal = () => {
     vmSaveModal.value.visible = true
 };
-const refresh = () => {
-    onPaginationChange({ current: 1, pageSize: 10})
+const refresh = async () => {
+    await getData();
 };
 
 onMounted( () => {
