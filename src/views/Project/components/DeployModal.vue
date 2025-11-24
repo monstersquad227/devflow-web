@@ -1,7 +1,7 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="发布项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" :confirm-loading="confirmLoading">
-            <a-form ref="formRef" :model="formState" layout="horizontal" :wrapperCol="{ span: 20 }" >
+        <a-modal v-model:open="visible" title="发布项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" :confirm-loading="confirmLoading" okText="发布">
+            <a-form ref="formRef" :model="formState" layout="vertical" >
                 <a-form-item label="发布类型">
                     <a-radio-group v-model:value="formState.publish_type" @change="radioChange">
                         <a-radio value="kubernetes">Kubernetes</a-radio>
@@ -9,14 +9,14 @@
                         <a-radio value="flowedge">FlowEdge</a-radio>
                     </a-radio-group>
                 </a-form-item>
-                <a-row>
+                <a-row :gutter="16">
                     <a-col :span="12">
-                        <a-form-item label="项目名" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
+                        <a-form-item label="项目名" >
                             <a-input v-model:value="formState.deployment_name" disabled />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="环境" name="env" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" :rules="[{ required: true, message: '选择环境'}]">
+                        <a-form-item label="环境" name="env" :rules="[{ required: true, message: '选择环境'}]">
                             <a-select v-model:value="formState.env" :options="envOptions" @change="envSelectChange"></a-select>
                         </a-form-item>
                     </a-col>
@@ -33,7 +33,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center" v-if="formState.publish_type === 'flowedge'">
                     <span>发布节点</span>
-                    <a-transfer :data-source="flowedgeDataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px"></a-transfer>
+                    <a-transfer :data-source="flowedgeDataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px" :titles="['可用节点', '已选节点']" />
                 </div>
             </a-form>
         </a-modal>
@@ -70,63 +70,63 @@ const flowedgeDataSource = ref([]);
 const radioChange = () => {
     if (formState.value.publish_type === 'docker') {
         getVmByApplication(props.project.deployment_name)
-            .then((res) => {
-                dataSource.value = res.map(item => ({
-                    key: item["public_ip"] || item["private_ip"],
-                    title: item["instance_name"] || item["public_ip"] || "",
-                }))
-            });
+                .then((res) => {
+                    dataSource.value = res.map(item => ({
+                        key: item["public_ip"] || item["private_ip"],
+                        title: item["instance_name"] || item["public_ip"] || "",
+                    }))
+                });
     }
     // else if (formState.value.publish_type === 'flowedge') {
-        // getFlowedgesByApplication(props.project.deployment_name)
-        //         .then((res) => {
-        //             flowedgeDataSource.value = res.map(item => ({
-        //                 key: item["agent_id"],
-        //                 title: item["hostname"],
-        //             }))
-        //         })
+    // getFlowedgesByApplication(props.project.deployment_name)
+    //         .then((res) => {
+    //             flowedgeDataSource.value = res.map(item => ({
+    //                 key: item["agent_id"],
+    //                 title: item["hostname"],
+    //             }))
+    //         })
     // }
 };
 const envSelectChange = () => {
     const envLabel = envOptions.value.find(item => item["value"] === formState.value.env);
     getProjectTags(formState.value.deployment_name, envLabel["label"])
-        .then((res) => {
-            if (!res || !Array.isArray(res) || res.length === 0) {
-                tagOptions.value = [];
-                return;
-            }
+            .then((res) => {
+                if (!res || !Array.isArray(res) || res.length === 0) {
+                    tagOptions.value = [];
+                    return;
+                }
 
-            tagOptions.value = res.map(item => ({
-                label: item.name,
-                value: item.name
-            })).sort((a, b) => {
-                // 提取 "20240801_153654" 部分（去掉后面的 -xxx）
-                const dateA = a.value.split("-")[0];
-                const dateB = b.value.split("-")[0];
-                // 转换成 Date 对象
-                const parseDate = (dateStr) => {
-                    const [date, time] = dateStr.split("_");
-                    return new Date(
-                        date.substring(0, 4),  // 年
-                        date.substring(4, 6) - 1,  // 月（0-11）
-                        date.substring(6, 8),  // 日
-                        time.substring(0, 2),  // 时
-                        time.substring(2, 4),  // 分
-                        time.substring(4, 6)   // 秒
-                    );
-                };
-                return parseDate(dateB) - parseDate(dateA); // 降序排序
+                tagOptions.value = res.map(item => ({
+                    label: item.name,
+                    value: item.name
+                })).sort((a, b) => {
+                    // 提取 "20240801_153654" 部分（去掉后面的 -xxx）
+                    const dateA = a.value.split("-")[0];
+                    const dateB = b.value.split("-")[0];
+                    // 转换成 Date 对象
+                    const parseDate = (dateStr) => {
+                        const [date, time] = dateStr.split("_");
+                        return new Date(
+                                date.substring(0, 4),  // 年
+                                date.substring(4, 6) - 1,  // 月（0-11）
+                                date.substring(6, 8),  // 日
+                                time.substring(0, 2),  // 时
+                                time.substring(2, 4),  // 分
+                                time.substring(4, 6)   // 秒
+                        );
+                    };
+                    return parseDate(dateB) - parseDate(dateA); // 降序排序
+                });
             });
-        });
 
     if (formState.value.publish_type === 'kubernetes') {
         getNamespacesByEnv(envLabel["label"])
-            .then((res) => {
-                namespaceOptions.value = res.filter(item => !/^(kube-|cattle-|ingress-|default|local)/.test(item.metadata.name)).map(item => ({
-                    label: item.metadata.name,
-                    value: item.metadata.name
-                }))
-            });
+                .then((res) => {
+                    namespaceOptions.value = res.filter(item => !/^(kube-|cattle-|ingress-|default|local)/.test(item.metadata.name)).map(item => ({
+                        label: item.metadata.name,
+                        value: item.metadata.name
+                    }))
+                });
     } else if (formState.value.publish_type === 'flowedge') {
         // 获取 flowedge 数据并根据环境过滤
         getFlowedgesByApplication(props.project.deployment_name)
@@ -170,7 +170,7 @@ const handleOk = async () => {
 watchEffect(() => {
     if (visible.value === true) {
         formState.value = {
-            publish_type: 'kubernetes',
+            publish_type: 'flowedge',
             deployment_name: '',
             env: '',
             ecs: [],
@@ -178,13 +178,13 @@ watchEffect(() => {
         tagOptions.value = [];
         namespaceOptions.value = [];
         getEnvData(1, 100)
-            .then((res) => {
-                const { data } = res
-                envOptions.value = data.map(item => ({
-                    label: item.name,
-                    value: item.id
-                }))
-            });
+                .then((res) => {
+                    const { data } = res
+                    envOptions.value = data.map(item => ({
+                        label: item.name,
+                        value: item.id
+                    }))
+                });
     }
     if (props.project) {
         formState.value.deployment_name = props.project.deployment_name;
