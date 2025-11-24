@@ -1,33 +1,36 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="构建项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
-            <a-form :model="formState" layout="horizontal"  :wrapperCol="{ span: 24 }">
-                <a-row>
+        <a-modal v-model:open="visible" title="构建项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" okText="构建" >
+            <a-form ref="formRef" :model="formState" layout="vertical" >
+                <a-form-item label="项目名">
+                    <a-input v-model:value="formState.gitlab_name" disabled />
+                </a-form-item>
+                <a-row :gutter="16">
                     <a-col :span="12">
-                        <a-form-item label="项目名" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-input v-model:value="formState.gitlab_name" disabled />
+                        <a-form-item label="环境" name="env" :rules="[{ required: true, message: '请选择环境' }]" >
+                            <a-select v-model:value="formState.env" :options="envOptions" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="环境" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-select v-model:value="formState.env" :options="envOptions" ></a-select>
+                        <a-form-item label="分支" name="branch" :rules="[{ required: true, message: '请选择分支' }]" >
+                            <a-select v-model:value="formState.branch" :options="branchesOptions" @change="branchChange" />
                         </a-form-item>
                     </a-col>
                 </a-row>
 
-                <a-form-item label="仓库地址">
-                    <a-input v-model:value="formState.gitlab_repo" disabled />
-                </a-form-item>
+<!--                <a-form-item label="仓库地址">-->
+<!--                    <a-input v-model:value="formState.gitlab_repo" disabled />-->
+<!--                </a-form-item>-->
 
-                <a-row>
+                <a-row :gutter="16">
                     <a-col :span="12">
-                        <a-form-item label="分支" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-select v-model:value="formState.branch" :options="branchesOptions" @change="branchChange"/>
+                        <a-form-item label="作者">
+                            <a-input v-model:value="formState.author" disabled />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="作者" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-                            <a-input v-model:value="formState.author" disabled />
+                        <a-form-item label="提交ID">
+                            <a-input v-model:value="formState.short_id" disabled />
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -35,15 +38,15 @@
                 <a-form-item label="版本信息">
                     <a-input v-model:value="formState.message" disabled />
                 </a-form-item>
-                <a-form-item label="编译指令">
-                    <a-input v-model:value="formState.command" />
+                <a-form-item label="编译指令" name="command" :rules="[{ required: true, message: '请选输入编译指令' }]">
+                    <a-textarea :rows="3" v-model:value="formState.command" placeholder="例如: npm install && npm run fat 或 mvn clean package -Pprod -U" />
                 </a-form-item>
-                <a-form-item label="项目路径">
-                    <a-input v-model:value="formState.project_build_path" disabled />
-                </a-form-item>
-                <a-form-item label="项目包名">
-                    <a-input v-model:value="formState.project_package_name" disabled />
-                </a-form-item>
+<!--                <a-form-item label="项目路径">-->
+<!--                    <a-input v-model:value="formState.project_build_path" disabled />-->
+<!--                </a-form-item>-->
+<!--                <a-form-item label="项目包名">-->
+<!--                    <a-input v-model:value="formState.project_package_name" disabled />-->
+<!--                </a-form-item>-->
                 <a-form-item label="备注信息">
                     <a-textarea v-model:value="formState.description" />
                 </a-form-item>
@@ -53,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watchEffect } from "vue";
+import {ref, defineProps, watchEffect, nextTick} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { getEnvData } from "@/http/setting";
 import { buildProjects, getProjectsBranches, getProjectsBranchesDetails } from "@/http/project";
@@ -80,23 +83,29 @@ const formState = ref({
 const envOptions = ref([]);
 const branchesOptions = ref([]);
 const visible = ref(false);
-const handleOk = () => {
-    const data = {
-        gitlab_name: formState.value.gitlab_name,
-        deployment_name: formState.value.deployment_name,
-        task_id: formState.value.task_id.toString(),
-        branch: formState.value.branch,
-        gitlab_repo: formState.value.gitlab_repo,
-        environment_unique: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
-        harbor_url: "harbor.chengdd.cc",
-        short_id: formState.value.short_id,
-        project_build_path: formState.value.project_build_path,
-        project_package_name: formState.value.project_package_name,
-        command: formState.value.command
+const formRef = ref();
+const handleOk = async () => {
+    try {
+        await formRef.value.validate();
+
+        const data = {
+            gitlab_name: formState.value.gitlab_name,
+            deployment_name: formState.value.deployment_name,
+            task_id: formState.value.task_id.toString(),
+            branch: formState.value.branch,
+            gitlab_repo: formState.value.gitlab_repo,
+            environment_unique: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
+            harbor_url: "harbor.chengdd.cc",
+            short_id: formState.value.short_id,
+            project_build_path: formState.value.project_build_path,
+            project_package_name: formState.value.project_package_name,
+            command: formState.value.command
+        }
+        await buildProjects(data, formState.value.id);
+        visible.value = false;
+    } catch (error) {
+        console.log('验证或构建失败:', error);
     }
-    buildProjects(data, formState.value.id);
-    setTimeout(() => {}, 1000);
-    visible.value = false;
 };
 const branchChange = () => {
     getProjectsBranchesDetails(props.project.gitlab_id, formState.value.branch)
@@ -107,7 +116,7 @@ const branchChange = () => {
         })
 };
 
-watchEffect(() => {
+watchEffect(async () => {
     if (visible.value === true) {
 
         formState.value = {
@@ -125,7 +134,14 @@ watchEffect(() => {
         };
         envOptions.value = [];
         branchesOptions.value = [];
-        getEnvData(1, 100)
+
+        // 清除之前的验证错误
+        await nextTick(() => {
+            formRef.value?.clearValidate();
+        });
+
+
+        await getEnvData(1, 100)
             .then((res) => {
                 const { data } = res
                 envOptions.value = data.map(item => ({
@@ -133,7 +149,7 @@ watchEffect(() => {
                     value: item.id
                 }))
             });
-        getProjectsBranches(props.project.gitlab_id)
+        await getProjectsBranches(props.project.gitlab_id)
             .then((res) => {
                 const {branches} = res
                 branchesOptions.value = branches.map(item => ({
