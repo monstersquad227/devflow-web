@@ -50,6 +50,9 @@
                 <a-form-item label="备注信息">
                     <a-textarea v-model:value="formState.description" />
                 </a-form-item>
+
+                <!-- 提示信息 -->
+                <a-alert message="构建完成后，产物将自动上传至镜像仓库" type="info" show-icon style="margin-top: 24px" />
             </a-form>
         </a-modal>
     </a-config-provider>

@@ -4,9 +4,9 @@
             <a-form ref="formRef" :model="formState" layout="vertical" >
                 <a-form-item label="发布类型">
                     <a-radio-group v-model:value="formState.publish_type" @change="radioChange">
-                        <a-radio value="kubernetes">Kubernetes</a-radio>
 <!--                        <a-radio value="docker">Docker</a-radio>-->
                         <a-radio value="flowedge">FlowEdge</a-radio>
+                        <a-radio value="kubernetes">Kubernetes</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-row :gutter="16">
@@ -17,31 +17,34 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item label="环境" name="env" :rules="[{ required: true, message: '选择环境'}]">
-                            <a-select v-model:value="formState.env" :options="envOptions" @change="envSelectChange"></a-select>
+                            <a-select v-model:value="formState.env" :options="envOptions" @change="envSelectChange" />
                         </a-form-item>
                     </a-col>
                 </a-row>
                 <a-form-item label="名称空间" v-if="formState.publish_type === 'kubernetes'">
-                    <a-select v-model:value="formState.namespace" :options="namespaceOptions" ></a-select>
+                    <a-select v-model:value="formState.namespace" :options="namespaceOptions" />
                 </a-form-item>
                 <a-form-item label="发布版本" name="tag" :rules="[{ required: true, message: '请选择发布的版本' }]">
-                    <a-select v-model:value="formState.tag" :options="tagOptions" ></a-select>
+                    <a-select v-model:value="formState.tag" :options="tagOptions" />
                 </a-form-item>
                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center" v-if="formState.publish_type === 'docker'">
                     <span>发布机器</span>
-                    <a-transfer :data-source="dataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px"></a-transfer>
+                    <a-transfer :data-source="dataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px" />
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center" v-if="formState.publish_type === 'flowedge'">
                     <span>发布节点</span>
                     <a-transfer :data-source="flowedgeDataSource" :render="item => item.title" v-model:target-keys="formState.ecs" style="margin-top: 20px" :titles="['可用节点', '已选节点']" />
                 </div>
+
+                <!-- 提示信息 -->
+                <a-alert message="发布后，项目将立即更新到选定的环境" type="info" show-icon style="margin-top: 24px" />
             </a-form>
         </a-modal>
     </a-config-provider>
 </template>
 
 <script setup>
-import { ref, defineProps, watchEffect } from "vue";
+import {ref, defineProps, watchEffect, nextTick} from "vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { getEnvData, getNamespacesByEnv } from "@/http/setting";
 import { getVmByApplication } from "@/http/vm";
@@ -167,7 +170,7 @@ const handleOk = async () => {
     // }, 3000);
 };
 
-watchEffect(() => {
+watchEffect(async () => {
     if (visible.value === true) {
         formState.value = {
             publish_type: 'flowedge',
@@ -177,7 +180,14 @@ watchEffect(() => {
         };
         tagOptions.value = [];
         namespaceOptions.value = [];
-        getEnvData(1, 100)
+        flowedgeDataSource.value = [];
+
+        // 清除之前的验证错误
+        await nextTick(() => {
+            formRef.value?.clearValidate();
+        });
+
+        await getEnvData(1, 100)
                 .then((res) => {
                     const { data } = res
                     envOptions.value = data.map(item => ({
