@@ -1,13 +1,20 @@
 <template>
     <a-config-provider :locale="zhCN">
-        <a-modal v-model:open="visible" title="添加项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" >
-            <a-form ref="formRef" :model="formState" layout="horizontal" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-                <a-form-item label="项目名" name="gitlab_name" :rules="[{ required: true, message: '请输入项目名' }]">
-                    <a-input v-model:value="formState.gitlab_name" placeholder="请输入项目名" />
-                </a-form-item>
-                <a-form-item label="应用名" name="deployment_name" :rules="[{ required: true, message: '请输入应用名'}]">
-                    <a-input v-model:value="formState.deployment_name" placeholder="请输入应用名" />
-                </a-form-item>
+        <a-modal v-model:open="visible" title="添加项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" ok-text="添加">
+            <a-form ref="formRef" :model="formState" layout="vertical" >
+                <a-row :gutter="16">
+                    <a-col span="12">
+                        <a-form-item label="项目名" name="gitlab_name" :rules="[{ required: true, message: '请输入项目名' }]">
+                            <a-input v-model:value="formState.gitlab_name" placeholder="请输入项目名" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col span="12">
+                        <a-form-item label="应用名" name="deployment_name" :rules="[{ required: true, message: '请输入应用名'}]">
+                            <a-input v-model:value="formState.deployment_name" placeholder="请输入应用名" />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+
                 <a-form-item label="任务模版" name="task_id" :rules="[{ required: true, message: '请选择任务模版' }]">
                     <a-select v-model:value="formState.task_id" :options="taskOptions" placeholder="请选择任务模版" />
                 </a-form-item>
@@ -18,7 +25,7 @@
                     <a-input v-model:value="formState.project_package_name" placeholder="请输入项目包名" />
                 </a-form-item>
                 <a-form-item label="备注信息">
-                    <a-textarea v-model:value="formState.description" placeholder="请输入项目信息"></a-textarea>
+                    <a-textarea v-model:value="formState.description" placeholder="请输入项目信息; 编译指令: mvn clean package -U -Pprod 或者 npm install && npm run fat" />
                 </a-form-item>
             </a-form>
         </a-modal>
