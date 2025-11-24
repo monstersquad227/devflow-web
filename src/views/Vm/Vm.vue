@@ -13,7 +13,7 @@
             刷新</a-button>
             <a-input-search style="width: 200px" placeholder="内网IP、实例ID和名称" />
         </div>
-        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 2000}" @change="onPaginationChange" >
+        <a-table :data-source="dataSource" :columns="columns" :pagination="pagination" :scroll="{ x: 'max-content' }" @change="onPaginationChange" >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
@@ -44,8 +44,8 @@
             </template>
         </a-table>
 
-        <SaveModal ref="vmSaveModal"/>
-        <UpdateModal ref="vmUpdateModal" :vm="vmUpdateRecord"/>
+        <SaveModal ref="vmSaveModal" @success="getData" />
+        <UpdateModal ref="vmUpdateModal" :vm="vmUpdateRecord" @success="getData" />
         <AssignUserModal ref="assignUserModal" />
     </Layout>
 </template>

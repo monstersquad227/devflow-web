@@ -1,11 +1,11 @@
 <template>
     <a-config-provider :locale="zhCN">
         <a-modal v-model:open="visible" title="发布项目" :bodyStyle="{ padding: '20px' }" @ok="handleOk" :confirm-loading="confirmLoading">
-            <a-form :model="formState" layout="horizontal" :wrapperCol="{ span: 20 }" >
+            <a-form ref="formRef" :model="formState" layout="horizontal" :wrapperCol="{ span: 20 }" >
                 <a-form-item label="发布类型">
                     <a-radio-group v-model:value="formState.publish_type" @change="radioChange">
                         <a-radio value="kubernetes">Kubernetes</a-radio>
-                        <a-radio value="docker">Docker</a-radio>
+<!--                        <a-radio value="docker">Docker</a-radio>-->
                         <a-radio value="flowedge">FlowEdge</a-radio>
                     </a-radio-group>
                 </a-form-item>
@@ -16,7 +16,7 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="环境" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
+                        <a-form-item label="环境" name="env" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" :rules="[{ required: true, message: '选择环境'}]">
                             <a-select v-model:value="formState.env" :options="envOptions" @change="envSelectChange"></a-select>
                         </a-form-item>
                     </a-col>
@@ -24,7 +24,7 @@
                 <a-form-item label="名称空间" v-if="formState.publish_type === 'kubernetes'">
                     <a-select v-model:value="formState.namespace" :options="namespaceOptions" ></a-select>
                 </a-form-item>
-                <a-form-item label="发布版本">
+                <a-form-item label="发布版本" name="tag" :rules="[{ required: true, message: '请选择发布的版本' }]">
                     <a-select v-model:value="formState.tag" :options="tagOptions" ></a-select>
                 </a-form-item>
                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center" v-if="formState.publish_type === 'docker'">
@@ -48,11 +48,12 @@ import { getVmByApplication } from "@/http/vm";
 import {deployProjects, getProjectTags} from "@/http/project";
 import {getFlowedgesByApplication} from "@/http/flowedge";
 
+const formRef = ref();
 const props = defineProps({
     project: Object
 });
 const formState = ref({
-    publish_type: 'kubernetes',
+    publish_type: 'flowedge',
     deployment_name: '',
     env: '',
     namespace: '',
@@ -75,15 +76,16 @@ const radioChange = () => {
                     title: item["instance_name"] || item["public_ip"] || "",
                 }))
             });
-    } else if (formState.value.publish_type === 'flowedge') {
-        getFlowedgesByApplication(props.project.deployment_name)
-                .then((res) => {
-                    flowedgeDataSource.value = res.map(item => ({
-                        key: item["agent_id"],
-                        title: item["hostname"],
-                    }))
-                })
     }
+    // else if (formState.value.publish_type === 'flowedge') {
+        // getFlowedgesByApplication(props.project.deployment_name)
+        //         .then((res) => {
+        //             flowedgeDataSource.value = res.map(item => ({
+        //                 key: item["agent_id"],
+        //                 title: item["hostname"],
+        //             }))
+        //         })
+    // }
 };
 const envSelectChange = () => {
     const envLabel = envOptions.value.find(item => item["value"] === formState.value.env);
@@ -125,23 +127,44 @@ const envSelectChange = () => {
                     value: item.metadata.name
                 }))
             });
+    } else if (formState.value.publish_type === 'flowedge') {
+        // 获取 flowedge 数据并根据环境过滤
+        getFlowedgesByApplication(props.project.deployment_name)
+                .then((res) => {
+                    const envPrefix = envLabel["label"]; // 获取环境名，如 "prod"、"dev"
+
+                    flowedgeDataSource.value = res
+                            .filter(item => item["hostname"].startsWith(envPrefix + "-")) // ✅ 过滤：只保留 prod-xxx、dev-xxx 等
+                            .map(item => ({
+                                key: item["agent_id"],
+                                title: item["hostname"],
+                            }));
+                });
     }
 };
-const handleOk = () => {
+const handleOk = async () => {
     confirmLoading.value = true;
-    const data = {
-        name: formState.value.deployment_name,
-        env: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
-        publish_type: formState.value.publish_type,
-        tag: formState.value.tag,
-        ecs: formState.value.ecs,
-    }
-    deployProjects(data, props.project.id)
+    try {
+        const data = {
+            name: formState.value.deployment_name,
+            env: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
+            publish_type: formState.value.publish_type,
+            tag: formState.value.tag,
+            ecs: formState.value.ecs,
+        }
+        await formRef.value.validate();
+        await deployProjects(data, props.project.id);
 
-    setTimeout(() => {
         confirmLoading.value = false;
         visible.value = false;
-    }, 3000);
+    } catch (error) {
+        console.log(error);
+        confirmLoading.value = false;
+    }
+
+    // setTimeout(() => {
+    //
+    // }, 3000);
 };
 
 watchEffect(() => {

@@ -40,6 +40,7 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { defineProps, ref, watchEffect } from "vue";
 import { updateVmData } from "@/http/vm";
 
+const emit = defineEmits(["success"])
 const formState = ref({
     id: null,
     instance_id: '',
@@ -88,7 +89,8 @@ const props = defineProps({
     vm: Object,
 });
 const handleOk = async () => {
-    await updateVmData(formState.value)
+    await updateVmData(formState.value);
+    emit('success');
     visible.value = false;
 };
 

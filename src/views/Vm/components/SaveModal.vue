@@ -80,7 +80,7 @@ const rules = ref({
         { required: true, message: '请选择机器系统' }
     ]
 });
-
+const emit = defineEmits(["success"]);
 const visible = ref(false);
 const formState = ref({
     instance_id: '',
@@ -127,7 +127,8 @@ const osOptions = ref([
 const handleOk = () => {
     formRef.value.validate().then(async()=> {
         formState.value.password = Base64.encode(formState.value.password);
-        await postSaveVmData(formState.value)
+        await postSaveVmData(formState.value);
+        emit('success');
         visible.value = false;
     })
 };
