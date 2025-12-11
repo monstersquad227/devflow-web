@@ -12,6 +12,9 @@ export default createStore({
         isLogin: (state) => Boolean(state.userInfo.token),
         userInfo: (state) => state.userInfo,
         roles: (state) => state.userInfo.user.roles,
+        user: (state) => state.userInfo.user || {},
+        permissions: (state) => state.userInfo.permissions || [],
+        menus: (state) => state.userInfo.menus || [],
     },
     mutations: {
         SET_USER_INFO: (state, data) => (state.userInfo = data),

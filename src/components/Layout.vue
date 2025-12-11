@@ -14,9 +14,13 @@
                     mode="inline"
                     @click="handleClick"
             >
-                <a-menu-item v-for="route in menuRoutes" :key="route.path">
-                    <component :is="route.meta.icon" />
-                    <span>{{ route.meta.title }}</span>
+                <!-- 根据后端返回的 menus 渲染菜单 -->
+                <a-menu-item
+                        v-for="{path, permission_code, permission_name} in menus"
+                        :key="path"
+                >
+                    <component :is="getIconComponent(permission_code)" />
+                    <span>{{ permission_name }}</span>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
@@ -73,27 +77,49 @@
 import { computed, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import store from '@/store';
+import {
+    AppstoreOutlined,
+    HddOutlined,
+    InstagramOutlined,
+    SettingOutlined,
+    TeamOutlined,
+    UserOutlined
+} from "@ant-design/icons-vue";
 
 const router = useRouter();
 const selectedKeys = ref(['']);
 const collapsed = ref(false);
 
 const userInfo = computed(() => store.getters.userInfo);
+const menus = computed(() => store.getters.menus)
 const accountName = userInfo.value.user.name;
 
 watchEffect(() => {
     selectedKeys.value = [router.currentRoute.value.path];
 });
 
-const menuRoutes = computed(() =>
-        router.options.routes
-                .filter(route => route.meta?.title)
-                .filter(route => !route.meta?.hideInMenu)
-                .filter(route => {
-                    const roles = store.getters.roles;
-                    return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
-                })
-);
+// const menuRoutes = computed(() =>
+//         router.options.routes
+//                 .filter(route => route.meta?.title)
+//                 .filter(route => !route.meta?.hideInMenu)
+//                 .filter(route => {
+//                     const roles = store.getters.roles;
+//                     return !route.meta.roles || roles.some(role => route.meta.roles.includes(role));
+//                 })
+// );
+// 图标映射表
+const iconMap = {
+    'project': AppstoreOutlined,
+    'vm': HddOutlined,
+    'user': UserOutlined,
+    'role': TeamOutlined,
+    'setting': SettingOutlined,
+    'flowedge': InstagramOutlined,
+};
+// 根据权限码获取对应的图标组件
+const getIconComponent = (permission_code) => {
+    return iconMap[permission_code] || AppstoreOutlined;
+};
 
 const handleClick = (info) => {
     router.push(info.key);

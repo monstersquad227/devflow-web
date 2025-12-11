@@ -7,7 +7,7 @@
                 </template>
                 刷新</a-button>
         </div>
-        <a-table :columns="columns" :data-source="dataSource" :pagination="pagination" :scroll="{ x: 1500 }"  @change="onPaginationChange">
+        <a-table :columns="columns" :data-source="dataSource" :pagination="pagination" :scroll="{ x: 'max-content' }"  @change="onPaginationChange">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
@@ -42,15 +42,13 @@ import {getFlowedges} from "@/http/flowedge";
 import UpdateModal from "@/views/Flowedge/components/UpdateModal.vue";
 
 const columns = ref([
-    { title: '名称', align: 'center', dataIndex: 'agent_id', key: 'agent_id', width: 200, ellipsis: true },
-    { title: '主机名', align: 'center', dataIndex: 'hostname', key: 'hostname', width: 200, ellipsis: true },
+    { title: '名称', align: 'left', dataIndex: 'agent_id', key: 'agent_id', width: 180, ellipsis: true },
+    { title: '主机名', align: 'left', dataIndex: 'hostname', key: 'hostname', width: 160, ellipsis: true },
     { title: '状态', align: 'center', dataIndex: 'status', key: 'status', width: 80 },
     { title: '版本', align: 'center', dataIndex: 'version', key: 'version', width: 100 },
-    { title: '关联项目', align: 'center', dataIndex: 'application', key: 'application', width: 200 },
-    { title: '心跳时间', align: 'center', dataIndex: 'last_heartbeat', key: 'last_heartbeat', width: 200 },
-    { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
-    { title: '更新时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
-    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 200 }
+    { title: '关联项目', align: 'center', dataIndex: 'application', key: 'application', width: 120 },
+    { title: '心跳时间', align: 'center', dataIndex: 'last_heartbeat', key: 'last_heartbeat', width: 180 },
+    { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 150 }
 ]);
 const dataSource = ref([]);
 const pagination = ref({

@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="table-header">
-            <a-button type="primary" @click="showSaveModal">
+            <a-button v-permission="'project:add'" type="primary" @click="showSaveModal">
                 <template #icon>
                     <PlusCircleOutlined />
                 </template>添加</a-button>
@@ -15,6 +15,7 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'build'">
                     <a-button
+                            v-permission="'project:build'"
                             type="link"
                             :danger="idIsExist(record.id, projectBuildStatusFail)"
                             :disabled="idIsExist(record.id, projectBuildStatus)"
@@ -23,15 +24,15 @@
                     >{{ buildButtonText(record.id) }}</a-button>
                 </template>
                 <template v-if="column.key === 'deploy'">
-                    <a-button type="link" @click="showDeployModal(record)">deploy</a-button>
+                    <a-button v-permission="'project:deploy'" type="link" @click="showDeployModal(record)">deploy</a-button>
                 </template>
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a @click="showUpdateModal(record)">编辑</a>
-                        <a-divider type="vertical" />
-                        <a @click="showDeleteProjectModal(record)">删除</a>
-                        <a-divider type="vertical" />
-                        <a @click="showProjectDetailTable(record)">详情</a>
+                        <a v-permission="'project:edit'" @click="showUpdateModal(record)">编辑</a>
+                        <a-divider v-permission="'project:edit'" type="vertical" />
+                        <a v-permission="'project:delete'" @click="showDeleteProjectModal(record)">删除</a>
+                        <a-divider v-permission="'project:delete'" type="vertical" />
+                        <a v-permission="'project:view'" @click="showProjectDetailTable(record)">详情</a>
                     </span>
                 </template>
             </template>

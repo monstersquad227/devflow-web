@@ -24,7 +24,8 @@ const routes = [
             auth: true,
             title: '项目列表',
             icon: 'AppstoreOutlined',
-            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter'],
+            // roles: ['Owner', 'Maintainer', 'Developer', 'Reporter'],
+            permission: 'project',
         }
     },
     {
@@ -33,7 +34,8 @@ const routes = [
         component: () => import('@/views/Project/Detail.vue'),
         meta: {
             auth: true,
-            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
+            // roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
+            permission: 'project:view'
         }
     },
     {
@@ -44,7 +46,8 @@ const routes = [
             auth: true,
             title: '机器列表',
             icon: 'HddOutlined',
-            roles: ['Owner']
+            // roles: ['Owner']
+            permission: 'vm'
         }
     },
     {
@@ -55,7 +58,8 @@ const routes = [
             auth: true,
             title: '配置列表',
             icon: 'SettingOutlined',
-            roles: ['Owner', 'Maintainer']
+            // roles: ['Owner', 'Maintainer']
+            permission: 'setting'
         }
     },
     {
@@ -66,7 +70,8 @@ const routes = [
             auth: true,
             title: 'Edge列表',
             icon: 'InstagramOutlined',
-            roles: ['Owner']
+            // roles: ['Owner']
+            permission: 'flowedge'
         }
     },
     {
@@ -77,7 +82,7 @@ const routes = [
             auth: true,
             title: '个人中心',
             hideInMenu: true,
-            roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
+            // roles: ['Owner', 'Maintainer', 'Developer', 'Reporter']
         }
     },
     {
@@ -105,15 +110,32 @@ router.beforeEach((to, from, next) => {
         if (to.name === "Login") {
             next('/')
         } else {
-            const roles = store.getters.roles;
-            if (to.meta.roles && !roles.some(role => to.meta.roles.includes(role))) {
-                next('/');
+    //         const roles = store.getters.roles;
+    //         if (to.meta.roles && !roles.some(role => to.meta.roles.includes(role))) {
+    //             next('/');
+    //         } else {
+    //             next();
+    //         }
+    //     }
+    // } else {
+    //     next(to.meta?.auth ? '/login' : undefined);
+    // }
+
+
+            // 权限检查
+            if (to.meta.permission) {
+                const permissions = store.getters.permissions
+                if (permissions.includes(to.meta.permission)) {
+                    next()
+                } else {
+                    next('/') // 无权限跳转到首页
+                }
             } else {
-                next();
+                next()
             }
         }
     } else {
-        next(to.meta?.auth ? '/login' : undefined);
+        next(to.meta?.auth ? '/login' : undefined)
     }
 })
 

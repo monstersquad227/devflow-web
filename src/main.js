@@ -8,6 +8,8 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
 import * as Icons from '@ant-design/icons-vue';
 
+import permissionDirective from '@/directives/permission'
+
 const app = createApp(App);
 
 Object.keys(Icons).forEach((key) => {
@@ -17,4 +19,5 @@ Object.keys(Icons).forEach((key) => {
 app.use(store)
 app.use(router)
 app.use(Antd);
+app.directive('permission', permissionDirective)
 app.mount('#app')
