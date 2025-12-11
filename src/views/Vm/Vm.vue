@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="table-header">
-            <a-button type="primary" @click="showSaveModal">
+            <a-button v-permission="'vm:add'" type="primary" @click="showSaveModal">
                 <template #icon>
                     <PlusCircleOutlined />
                 </template>
@@ -17,17 +17,17 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a @click="showUpdateModal(record)">编辑</a>
-                        <a-divider type="vertical" />
-                        <a @click="showDeleteVmModal(record)">删除</a>
-                        <a-divider type="vertical" />
+                        <a v-permission="'vm:edit'" @click="showUpdateModal(record)">编辑</a>
+                        <a-divider v-permission="'vm:edit'" type="vertical" />
+                        <a v-permission="'vm:delete'" @click="showDeleteVmModal(record)">删除</a>
+                        <a-divider v-permission="'vm:delete'" type="vertical" />
                         <template v-if="record.cloud_provider === 'aliyun'">
-                            <a>续费</a>
-                            <a-divider type="vertical" />
+                            <a v-permission="'vm:renewal'" >续费</a>
+                            <a-divider v-permission="'vm:renewal'" type="vertical" />
                         </template>
-                        <a @click="showPasswordModal(record)">查看密码</a>
-                        <a-divider type="vertical" />
-                        <a @click="showAssignUserModal(record)">分配用户</a>
+                        <a v-permission="'vm:viewpassword'" @click="showPasswordModal(record)">查看密码</a>
+                        <a-divider v-permission="'vm:viewpassword'" type="vertical" />
+                        <a v-permission="'vm:assignuser'" @click="showAssignUserModal(record)">分配用户</a>
                     </span>
                 </template>
                 <template v-if="column.key === 'cloud_provider'">

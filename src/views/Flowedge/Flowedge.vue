@@ -11,14 +11,11 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'action'">
                     <span>
-                        <a>指令</a>
-                        <a-divider type="vertical" />
-                        <a @click="showUpdateModal(record)">编辑</a>
-                        <a-divider type="vertical" />
-                        <a>详情</a>
-<!--                        <a-divider type="vertical" />-->
-<!--                        <a>启动</a>-->
-<!--                        <a-divider type="vertical" />-->
+                        <a v-permission="'flowedge:instruction'">指令</a>
+                        <a-divider v-permission="'flowedge:instruction'" type="vertical" />
+                        <a v-permission="'flowedge:edit'" @click="showUpdateModal(record)">编辑</a>
+                        <a-divider v-permission="'flowedge:edit'" type="vertical" />
+                        <a v-permission="'flowedge:view'">详情</a>
                     </span>
                 </template>
                 <template v-if="column.key === 'status'">
@@ -90,10 +87,10 @@ const getFlowedgeStatus= (val) => {
     }
     return { s, t }
 };
-const showUpdateModal= (record) => {
+const showUpdateModal= ({ agent_id, application }) => {
     flowedgeUpdateModal.value.visible = true;
-    flowedgeUpdateModal.value.application = record.application;
-    flowedgeUpdateModal.value.flowedgeID = record.agent_id;
+    flowedgeUpdateModal.value.application = application;
+    flowedgeUpdateModal.value.flowedgeID = agent_id;
 };
 
 onMounted(async () => {

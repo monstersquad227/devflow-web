@@ -8,7 +8,8 @@ export default {
 			const hasAuth = hasPermission(value)
 
 			if (!hasAuth) {
-				el.parentNode && el.parentNode.removeChild(el)
+				// el.parentNode && el.parentNode.removeChild(el)
+				el.style.display = 'none'
 			}
 		}
 	}

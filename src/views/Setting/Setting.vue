@@ -9,16 +9,16 @@
                     </span>
                 </template>
                 <div class="table-header">
-                    <a-button type="primary" @click="showEnvSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button v-permission="'setting:env:add'" type="primary" @click="showEnvSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="envRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
                 <a-table :data-source="envDataSource" :columns="envColumns" :scroll="{ x: 'max-content' }" :pagination="envPagination" @change="envOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
-                                <a @click="showUpdateEnvModal(record)">编辑</a>
+                                <a v-permission="'setting:env:edit'" @click="showUpdateEnvModal(record)">编辑</a>
                                 <a-divider type="vertical" />
-                                <a @click="showDeleteEnvConfirm(record)">删除</a>
+                                <a v-permission="'setting:env:delete'" @click="showDeleteEnvConfirm(record)">删除</a>
                             </span>
                         </template>
                     </template>
@@ -32,16 +32,16 @@
                     </span>
                 </template>
                 <div class="table-header">
-                    <a-button type="primary" @click="showSaveImageModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button v-permission="'setting:image:add'" type="primary" @click="showSaveImageModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="imageRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
                 <a-table :data-source="imageDataSource" :columns="imageColumns" :scroll="{ x: 'max-content' }" :pagination="imagePagination" @change="imageOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
-                                <a @click="showUpdateImageModal(record)">编辑</a>
+                                <a v-permission="'setting:image:edit'" @click="showUpdateImageModal(record)">编辑</a>
                                 <a-divider type="vertical" />
-                                <a @click="showDeleteImageConfirm(record)">删除</a>
+                                <a v-permission="'setting:image:delete'" @click="showDeleteImageConfirm(record)">删除</a>
                             </span>
                         </template>
                     </template>
@@ -55,16 +55,16 @@
                     </span>
                 </template>
                 <div class="table-header">
-                    <a-button type="primary" @click="showTaskSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
+                    <a-button v-permission="'setting:task:add'" type="primary" @click="showTaskSaveModal"><template #icon><PlusCircleOutlined /></template>添加</a-button>
                     <a-button type="primary" @click="taskRefresh"><template #icon><ReloadOutlined /></template>刷新</a-button>
                 </div>
                 <a-table :data-source="taskDataSource" :columns="taskColumns" :scroll="{ x: 'max-content' }" :pagination="taskPagination" @change="taskOnPaginationChange" >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'action'">
                             <span>
-                                <a @click="showTaskUpdateModal(record)">编辑</a>
+                                <a v-permission="'setting:task:edit'" @click="showTaskUpdateModal(record)">编辑</a>
                                 <a-divider type="vertical" />
-                                <a @click="showTaskDeleteModal(record)">删除</a>
+                                <a v-permission="'setting:task:delete'" @click="showTaskDeleteModal(record)">删除</a>
                             </span>
                         </template>
                     </template>
