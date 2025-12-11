@@ -50,6 +50,8 @@ import { getEnvData, getNamespacesByEnv } from "@/http/setting";
 import { getVmByApplication } from "@/http/vm";
 import {deployProjects, getProjectTags} from "@/http/project";
 import {getFlowedgesByApplication} from "@/http/flowedge";
+import {hasPermission} from "@/utils/permission";
+import {message} from "ant-design-vue";
 
 const formRef = ref();
 const props = defineProps({
@@ -92,6 +94,16 @@ const radioChange = () => {
 };
 const envSelectChange = () => {
     const envLabel = envOptions.value.find(item => item["value"] === formState.value.env);
+
+    if (envLabel?.label === 'prod' && !hasPermission('project:deploy:prod')) {
+        message.error("您没有生产环境发布权限！");
+        formState.value.env = "";          // 清空选择
+        tagOptions.value = [];             // 清空其它依赖项
+        namespaceOptions.value = [];
+        flowedgeDataSource.value = [];
+        return;
+    }
+
     getProjectTags(formState.value.deployment_name, envLabel["label"])
             .then((res) => {
                 if (!res || !Array.isArray(res) || res.length === 0) {
