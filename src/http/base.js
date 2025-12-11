@@ -18,6 +18,16 @@ export const login = (account, password) => {
 	)
 }
 
+export const ChangePassword = (data) => {
+	return request(
+		{
+			url: DEVFLOW + '/user/password',
+			method: 'post',
+			data: data
+		},
+	)
+}
+
 export const getUsers= () => {
 	return request({
 		url: DEVFLOW + '/users',

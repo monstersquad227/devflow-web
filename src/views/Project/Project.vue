@@ -145,7 +145,7 @@ const fetchProjectsBuildStatus = () => {
 const startCheckBuildStatusesInterval = () => {
     projectBuildStatusIntervalId.value = setInterval(() => {
         fetchProjectsBuildStatus();
-    }, 3000)
+    }, 1000)
 };
 const stopCheckBuildStatusesInterval = () => {
     clearInterval(projectBuildStatusIntervalId.value);

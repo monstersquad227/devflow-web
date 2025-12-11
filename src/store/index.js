@@ -8,13 +8,14 @@ export default createStore({
         userInfo: user || Object.create(null),
     },
     getters: {
-        token: (state) => state.userInfo.token,
-        isLogin: (state) => Boolean(state.userInfo.token),
-        userInfo: (state) => state.userInfo,
-        roles: (state) => state.userInfo.user.roles,
-        user: (state) => state.userInfo.user || {},
-        permissions: (state) => state.userInfo.permissions || [],
-        menus: (state) => state.userInfo.menus || [],
+        token: (state) => state.userInfo?.token || '',
+        isLogin: (state) => Boolean(state.userInfo?.token),
+        userInfo: (state) => state.userInfo || {},
+
+        roles: (state) => state.userInfo?.user?.roles || [],
+        user: (state) => state.userInfo?.user || {},
+        permissions: (state) => state.userInfo?.permissions || [],
+        menus: (state) => state.userInfo?.menus || [],
     },
     mutations: {
         SET_USER_INFO: (state, data) => (state.userInfo = data),
@@ -26,7 +27,7 @@ export default createStore({
         },
         clearUserInfo({ commit }) {
             delStorage('user')
-            commit('SET_USER_INFO', Object.create(null))
+            commit('SET_USER_INFO', null)
         },
     },
     modules: {
