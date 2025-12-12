@@ -107,6 +107,17 @@
         </div>
 
         <a-table v-permission="'user:view'" :data-source="dataSource" :columns="columns">
+            <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'action'">
+                    <span>
+                        <a v-permission="'user:delete'">禁用</a>
+                        <a-divider v-permission="'user:delete'" type="vertical" />
+                        <a>分配角色</a>
+                        <a-divider type="vertical" />
+                        <a>添加权限</a>
+                    </span>
+                </template>
+            </template>
         </a-table>
 
         <UpdatePasswordModal ref="updatePasswordModal" />
@@ -126,8 +137,20 @@ import UpdateModal from "@/views/Profile/components/UpdateModal.vue"
 
 // Variable
 const userInfo = store.getters.userInfo;
-const columns = ref([])
-const dataSource = ref([]);
+const columns = ref([
+    { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
+    { title: "用户名", align: "center", dataIndex: "name", key: "name" },
+    { title: "账号", align: "center", dataIndex: "account", key: "account" },
+    { title: "邮箱", align: "center", dataIndex: "email", key: "email" },
+    { title: "手机号", align: "center", dataIndex: "mobile", key: "mobile" },
+    { title: "是否删除", align: "center", dataIndex: "deleted", key: "deleted" },
+    { title: "创建时间", align: "center", dataIndex: "created_at", key: "created_at" },
+    { title: "最近登录时间", align: "center", dataIndex: "updated_at", key: "updated_at" },
+    { title: "操作", align: "center", key: "action", fixed: 'right', width: 240 },
+])
+const dataSource = ref([
+    { id: 3, name: '张三', account: 'zhangsan', email: 'zhangsan@qq.com', mobile: '15966663333', deleted: 0, created_at: '2025-04-24 09:49:51', updated_at: '2025-12-12 15:12:49' },
+]);
 const updatePasswordModal = ref(false);
 const saveModal = ref(false);
 const updateModal = ref(false);
