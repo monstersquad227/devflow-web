@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <a-table :data-source="dataSource" :columns="columns">
+        <a-table v-permission="'user:view'" :data-source="dataSource" :columns="columns">
         </a-table>
 
         <UpdatePasswordModal ref="updatePasswordModal" />
