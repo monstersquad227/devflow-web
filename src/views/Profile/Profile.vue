@@ -1,169 +1,231 @@
 <template>
     <Layout>
         <div class="container">
-            <!-- 头部个人信息卡片 -->
-            <a-card class="profile-header" :bordered="false">
-                <div class="profile-info">
-                    <a-avatar :size="100">
-                        <template #icon><UserOutlined /></template>
-                    </a-avatar>
-                    <div class="info-content">
-                        <h2>{{ userInfo.user.name }}</h2>
-                        <p class="email">
-                            <MailOutlined /> {{ userInfo.user.email }}
-                        </p>
-                        <p class="phone">
-                            <PhoneOutlined /> {{ userInfo.user.mobile }}
-                        </p>
-                        <a-button type="primary" @click="showPasswordModal">
-                            <EditOutlined /> 修改密码
-                        </a-button>
+            <div class="left-container">
+                <a-card class="card" :bordered="false">
+                    <div class="left-card-content">
+                        <a-avatar :size="150">
+                            <template #icon><UserOutlined /></template>
+                        </a-avatar>
+                        <div class="left-card-content-item">
+                            <h2>{{ userInfo.user.name }}</h2>
+                            <p class="email">
+                                <MailOutlined /> {{ userInfo.user.email }}
+                            </p>
+                            <p class="phone">
+                                <PhoneOutlined /> {{ userInfo.user.mobile }}
+                            </p>
+                            <p class="time">
+                                <FieldTimeOutlined /> {{ userInfo.user.updated_at }}
+                            </p>
+                            <div class="btn-group">
+                                <a-button type="primary" @click="showUpdatePasswordModal">
+                                    <EditOutlined /> 修改密码
+                                </a-button>
+                                <a-button type="primary" @click="showSaveModal">
+                                    <PlusCircleOutlined /> 添加用户
+                                </a-button>
+                                <a-button type="primary" @click="showUpdateModal">
+                                    <EditOutlined /> 修改信息
+                                </a-button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a-card>
+                </a-card>
+            </div>
+
+            <div class="right-container">
+                <a-card class="card" :bordered="false">
+                    <h2>统计</h2>
+                    <div class="right-card-content">
+                        <div class="grid-item">
+                            <BuildOutlined class="icon" style="color: #1677ff"/>
+                            <div>
+                                <div>230</div>
+                                <div>构建次数</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <CheckCircleOutlined class="icon" style="color: #52c41a;" />
+                            <div>
+                                <div>200</div>
+                                <div>成功</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <CloseCircleOutlined class="icon" style="color: #f5222d;" />
+                            <div>
+                                <div>30</div>
+                                <div>失败</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <RiseOutlined class="icon" style="color: #faad14;" />
+                            <div>
+                                <div>20%</div>
+                                <div>成功率</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <RocketOutlined class="icon" style="color: #1677ff;" />
+                            <div>
+                                <div>230</div>
+                                <div>发布次数</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <CheckCircleOutlined class="icon" style="color: #52c41a;" />
+                            <div>
+                                <div>200</div>
+                                <div>成功</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <CloseCircleOutlined class="icon" style="color: #f5222d;" />
+                            <div>
+                                <div>30</div>
+                                <div>失败</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-item">
+                            <RiseOutlined class="icon" style="color: #faad14;" />
+                            <div>
+                                <div>20%</div>
+                                <div>成功率</div>
+                            </div>
+                        </div>
+                    </div>
+                </a-card>
+            </div>
         </div>
 
-        <!-- 修改密码弹窗 -->
-        <a-config-provider :locale="zhCN">
-            <a-modal
-                v-model:open="passwordModalVisible"
-                title="修改密码"
-                @ok="handlePasswordSubmit"
-                destroyOnClose
-        >
-            <a-form ref="formRef" :model="formState" layout="vertical">
+        <a-table :data-source="dataSource" :columns="columns">
+        </a-table>
 
-                <a-form-item label="原始密码" name="password" :rules="[{ required: true, message: '请输入密码' }]">
-                    <a-input-password v-model:value="formState.password" />
-                </a-form-item>
-
-                <a-form-item label="新密码" name="new_password" :rules="[{ required: true, message: '请输入新密码,且不少于8位', min: 8 }]">
-                    <a-input-password v-model:value="formState.new_password" />
-                </a-form-item>
-
-                <a-form-item
-                        label="确认密码"
-                        name="confirm_new_password"
-                        :rules="[
-                        { required: true, message: '请确认新密码', min: 8 },
-                        { validator: validateConfirmPassword }
-                    ]"
-                >
-                    <a-input-password v-model:value="formState.confirm_new_password" />
-                </a-form-item>
-            </a-form>
-        </a-modal>
-        </a-config-provider>
+        <UpdatePasswordModal ref="updatePasswordModal" />
+        <SaveModal ref="saveModal" />
+        <UpdateModal ref="updateModal" />
     </Layout>
 </template>
 
 <script setup>
+// Import
 import { ref } from 'vue';
 import Layout from "@/components/Layout.vue";
 import store from "@/store";
-import * as base64 from "js-base64";
-import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {ChangePassword} from "@/http/base";
-import router from "@/router";
-import {message} from "ant-design-vue";
+import UpdatePasswordModal from "@/views/Profile/components/UpdatePasswordModal.vue";
+import SaveModal from "@/views/Profile/components/SaveModal.vue";
+import UpdateModal from "@/views/Profile/components/UpdateModal.vue"
 
+// Variable
 const userInfo = store.getters.userInfo;
-const passwordModalVisible = ref(false);
-const formRef = ref();
+const columns = ref([])
+const dataSource = ref([]);
+const updatePasswordModal = ref(false);
+const saveModal = ref(false);
+const updateModal = ref(false);
 
-const formState = ref({
-    password: '',
-    new_password: '',
-    confirm_new_password: '',
-});
-
-// 校验“确认密码”
-const validateConfirmPassword = async (_rule, value) => {
-    if (value !== formState.value.new_password) {
-        return Promise.reject('两次输入的新密码不一致');
-    }
-    return Promise.resolve();
+// Function
+const showUpdatePasswordModal = () => {
+    updatePasswordModal.value.visible = true;
 };
-
-// 打开弹窗
-const showPasswordModal = () => {
-    formState.value.password = '';
-    formState.value.new_password = '';
-    formState.value.confirm_new_password = '';
-    passwordModalVisible.value = true;
+const showSaveModal = () => {
+    saveModal.value.visible = true;
 };
-
-// 提交验证
-const handlePasswordSubmit = () => {
-    formRef.value.validate().then( async () => {
-        const data = {
-            account: base64.encode(userInfo.user.account),
-            password: base64.encode(formState.value.password),
-            new_password: base64.encode(formState.value.new_password),
-            confirm_new_password: base64.encode(formState.value.confirm_new_password),
-        };
-        await ChangePassword(data).then(res => {
-            message.info(res.message);
-        })
-        passwordModalVisible.value = false;
-        await store.dispatch('clearUserInfo');
-        await router.push('/login');
-    }).catch(err => {
-        console.warn("表单校验失败", err);
-    });
+const showUpdateModal = () => {
+    updateModal.value.visible = true;
 };
 
 </script>
 
 <style scoped>
 .container {
+    width: 100%;
+    height: 300px;
     margin: 0 auto;
-}
-
-/* 个人信息卡片 */
-.profile-header {
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.profile-info {
     display: flex;
     gap: 24px;
+}
+.left-container {
+    width: 100%;
+}
+.right-container {
+    width: 100%;
+}
+
+.card {
+    min-height: 280px;
+    min-width: 600px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px
+    rgba(0, 0, 0, 0.1);
+}
+
+.left-card-content  {
+    display: flex;
     align-items: center;
+    gap: 24px;
 }
 
-.info-content {
-    flex: 1;
+.left-card-content-item {
+    margin: 0 0 16px 0;
+    font-size: 16px;
 }
 
-.info-content h2 {
+.left-card-content-item h2 {
     margin: 0 0 8px 0;
     font-size: 24px;
     font-weight: 600;
 }
 
-.info-content {
-    color: #666;
-    margin: 0 0 8px 0;
-    font-size: 16px;
-}
-
-.info-content .email {
+.left-card-content-item .email {
     color: #999;
-    margin: 0 0 16px 0;
+    display: flex;
+    gap: 14px;
 }
 
-.info-content .phone {
+.left-card-content-item .phone {
     color: #999;
-    margin: 0 0 16px 0;
+    display: flex;
+    gap: 14px;
 }
 
-
-/* 响应式 */
-@media (max-width: 768px) {
-    .profile-info {
-        flex-direction: column;
-        text-align: center;
-    }
+.left-card-content-item .time {
+    color: #999;
+    display: flex;
+    gap: 14px;
 }
+
+.left-card-content-item .btn-group {
+    display: flex;
+    gap: 16px;
+}
+
+.right-card-content {
+    margin-top: 42px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+.right-card-content .grid-item {
+    display: flex;
+    gap: 32px;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+.right-card-content .icon {
+    font-size: 24px;
+}
+
 </style>

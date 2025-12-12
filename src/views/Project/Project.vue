@@ -48,6 +48,7 @@
 </template>
 
 <script setup>
+// Import
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { delProjects, getProjects, getProjectsBuildStatus } from "@/http/project";
 import SaveModal from "./components/SaveModal.vue";
@@ -60,7 +61,7 @@ import { onBeforeRouteLeave } from "vue-router";
 import { idIsExist } from "@/utils/exists";
 import router from "@/router";
 
-
+// Variable
 const dataSource = ref([]);
 const columns = [
     { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
@@ -89,6 +90,7 @@ const projectBuildStatus = ref([]);
 const projectBuildStatusFail = ref([]);
 const projectBuildStatusIntervalId = ref(null);
 
+// Function
 const showDeleteProjectModal = (record) => {
     Modal.confirm({
         title: record.gitlab_name+' 确定删除该项目吗？',
