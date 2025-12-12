@@ -49,7 +49,9 @@ const loginSubmit = async () => {
             } else {
                 message.error(res.message || '服务不可用，请稍后再试')
             }
-        })
+        }).finally(() => {
+                loading.value = false
+            })
 
         // loading.value = false;
         // await store.dispatch('setUserInfo', '')
