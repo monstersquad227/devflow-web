@@ -101,42 +101,57 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-    if (WhiteList.includes(to.name)) {
-        next()
-        return
-    }
-
-    if (store.getters.isLogin) {
-        if (to.name === "Login") {
-            next('/')
-        } else {
-    //         const roles = store.getters.roles;
-    //         if (to.meta.roles && !roles.some(role => to.meta.roles.includes(role))) {
-    //             next('/');
+    // if (WhiteList.includes(to.name)) {
+    //     next()
+    //     return
+    // }
+    //
+    // if (store.getters.isLogin) {
+    //     if (to.name === "Login") {
+    //         next('/')
+    //     } else {
+    //         // 权限检查
+    //         if (to.meta.permission) {
+    //             const permissions = store.getters.permissions
+    //             if (permissions.includes(to.meta.permission)) {
+    //                 next()
+    //             } else {
+    //                 next('/') // 无权限跳转到首页
+    //             }
     //         } else {
-    //             next();
+    //             next()
     //         }
     //     }
     // } else {
-    //     next(to.meta?.auth ? '/login' : undefined);
+    //     next(to.meta?.auth ? '/login' : undefined)
     // }
-
-
-            // 权限检查
-            if (to.meta.permission) {
-                const permissions = store.getters.permissions
-                if (permissions.includes(to.meta.permission)) {
-                    next()
-                } else {
-                    next('/') // 无权限跳转到首页
-                }
-            } else {
-                next()
-            }
-        }
-    } else {
-        next(to.meta?.auth ? '/login' : undefined)
+    // 1. 白名单（如 404 页面）
+    if (WhiteList.includes(to.name)) {
+        return next();
     }
+
+    const isLogin = store.getters.isLogin;
+
+    // 2. 未登录：访问需要 auth 的页面 → 重定向到 login
+    if (!isLogin) {
+        return to.meta?.auth ? next('/login') : next();
+    }
+
+    // 3. 已登录：访问 login → 重定向首页
+    if (to.name === 'Login') {
+        return next('/');
+    }
+
+    // 4. 权限检查（实时读取 store.getters.permissions）
+    if (to.meta.permission) {
+        const permissions = store.getters.permissions;
+        if (!permissions.includes(to.meta.permission)) {
+            return next('/');   // 无权限 → 首页
+        }
+    }
+
+    // 5. 默认放行
+    next();
 })
 
 export default router
