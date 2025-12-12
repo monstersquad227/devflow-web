@@ -22,7 +22,7 @@
                                 <a-button type="primary" @click="showUpdatePasswordModal">
                                     <EditOutlined /> 修改密码
                                 </a-button>
-                                <a-button type="primary" @click="showSaveModal">
+                                <a-button v-permission="'user:add'" type="primary" @click="showSaveModal">
                                     <PlusCircleOutlined /> 添加用户
                                 </a-button>
                                 <a-button type="primary" @click="showUpdateModal">
