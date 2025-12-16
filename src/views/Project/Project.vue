@@ -28,6 +28,14 @@
                 <template v-if="column.key === 'deploy'">
                     <a-button v-permission="'project:deploy'" type="link" @click="showDeployModal(record)">deploy</a-button>
                 </template>
+                <template v-if="column.key === 'tag'">
+                    <div v-if="record.tag === 1">
+                        <a-tag color="#52C41A">后端</a-tag>
+                    </div>
+                    <div v-if="record.tag === 0">
+                        <a-tag color="#1677FF">前端</a-tag>
+                    </div>
+                </template>
                 <template v-if="column.key === 'action'">
                     <span>
                         <a v-permission="'project:edit'" @click="showUpdateModal(record)">编辑</a>
@@ -67,6 +75,7 @@ const columns = [
     { title: "#", align: "center", dataIndex: "id", key: "id", width: 80 },
     { title: "项目名", align: "center", dataIndex: "gitlab_name", key: "gitlab_name", width: 150 },
     { title: "应用名", align: "center", dataIndex: "deployment_name", key: "deployment_name", width: 150 },
+    { title: "类别", align: "center", dataIndex: "tag", key: "tag", width: 80 },
     { title: "任务ID", align: "center", dataIndex: "task_id", key: "task_id", width: 80 },
     { title: "构建", align: "center", key: "build", width: 80 },
     { title: "发布", align: "center", key: "deploy", width: 80 },
