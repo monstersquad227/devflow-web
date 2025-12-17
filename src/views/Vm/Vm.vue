@@ -41,6 +41,13 @@
                         <a-tag :color="getColorBySpec(record.spec)">{{ getSpecText(record.spec) }}</a-tag>
                     </a-tooltip>
                 </template>
+                <template v-if="column.key === 'expired_at'">
+                    <span
+                            :style="{ color: getExpireColor(record.expired_at) }"
+                    >
+                        {{ record.expired_at }}
+                    </span>
+                </template>
             </template>
         </a-table>
 
@@ -207,6 +214,15 @@ const showSaveModal = () => {
 const refresh = async () => {
     await getData();
 };
+const getExpireColor = (expiredAt) => {
+    const expireTime = new Date(expiredAt.replace(/-/g, '/')).getTime()
+    const now = Date.now()
+    const diffDays = (expireTime - now) / 86400000
+
+    if (diffDays < 0) return '#a8071a'      // 已过期
+    if (diffDays <= 90) return '#ff4d4f'    // 10 天内
+    return 'inherit'
+}
 
 onMounted( () => {
     getData()
