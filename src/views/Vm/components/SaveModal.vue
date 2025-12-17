@@ -48,7 +48,7 @@ const formRef = ref();
 const rules = ref({
     instance_name: [
         { required: true, message: '请输入实例名称' },
-        { pattern: /^[A-Z]+-[A-Z0-9\-]+$/, message: '格式应为 环境-名称，例如 PROD-AUTH'}
+        { pattern: /^[A-Z]+(-[A-Z0-9]+)+$/, message: '格式应为 环境-名称，例如 PROD-AUTH'}
     ],
     password: [
         { required: true, message: '请输入实例密码' },
