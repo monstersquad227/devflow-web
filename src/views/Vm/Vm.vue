@@ -220,7 +220,7 @@ const getExpireColor = (expiredAt) => {
     const diffDays = (expireTime - now) / 86400000
 
     if (diffDays < 0) return '#a8071a'      // 已过期
-    if (diffDays <= 90) return '#ff4d4f'    // 10 天内
+    if (diffDays <= 10) return '#ff4d4f'    // 10 天内
     return 'inherit'
 }
 
