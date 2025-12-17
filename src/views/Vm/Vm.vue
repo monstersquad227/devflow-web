@@ -80,6 +80,7 @@ const columns = [
     { title: '系统', align: 'center', dataIndex: 'os', key: 'os', width: 100 },
     { title: '创建时间', align: 'center', dataIndex: 'created_at', key: 'created_at', width: 200 },
     { title: '修改时间', align: 'center', dataIndex: 'updated_at', key: 'updated_at', width: 200 },
+    { title: '过期时间', align: 'center', dataIndex: 'expired_at', key: 'expired_at', width: 200 },
     { title: '操作', align: 'center', dataIndex: 'action', key: 'action', fixed: 'right', width: 300 }
 ];
 const vmSaveModal = ref(false);
