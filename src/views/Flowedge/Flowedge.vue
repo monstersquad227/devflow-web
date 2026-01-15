@@ -15,7 +15,7 @@
                         <a-divider v-permission="'flowedge:instruction'" type="vertical" />
                         <a v-permission="'flowedge:edit'" @click="showUpdateModal(record)">编辑</a>
                         <a-divider v-permission="'flowedge:edit'" type="vertical" />
-                        <a v-permission="'flowedge:view'">详情</a>
+                        <a v-permission="'flowedge:view'" @click="showDetailModal(record)">详情</a>
                     </span>
                 </template>
                 <template v-if="column.key === 'status'">
@@ -28,15 +28,17 @@
         </a-table>
 
         <UpdateModal ref="flowedgeUpdateModal" :FlowedgeAgentID="flowedgeAgentId" @success="getData"/>
+        <DetailModal ref="flowedgeDetailModal"/>
     </Layout>
 </template>
 
 <script setup>
 
 import Layout from "@/components/Layout.vue";
-import {onMounted, ref} from "vue";
+import {h, onMounted, ref} from "vue";
 import {getFlowedges} from "@/http/flowedge";
 import UpdateModal from "@/views/Flowedge/components/UpdateModal.vue";
+import DetailModal from "@/views/Flowedge/components/DetailModal.vue";
 
 const columns = ref([
     { title: '名称', align: 'left', dataIndex: 'agent_id', key: 'agent_id', width: 180, ellipsis: true },
@@ -57,6 +59,7 @@ const pagination = ref({
 });
 const flowedgeUpdateModal = ref(false);
 const flowedgeAgentId = ref('');
+const flowedgeDetailModal = ref(false);
 
 const getData = async () => {
     await getFlowedges(pagination.value.current, pagination.value.pageSize)
@@ -92,6 +95,17 @@ const showUpdateModal= ({ agent_id, application }) => {
     flowedgeUpdateModal.value.application = application;
     flowedgeUpdateModal.value.flowedgeID = agent_id;
 };
+const showDetailModal = (val) => {
+    let metadataObj = {}
+    try {
+        metadataObj = JSON.parse(val.metadata)
+    } catch (e) {
+        console.error('解析 metadata 出错', e)
+    }
+
+    flowedgeDetailModal.value.visible = true;
+    flowedgeDetailModal.value.metadata = metadataObj;
+}
 
 onMounted(async () => {
     await getData()
