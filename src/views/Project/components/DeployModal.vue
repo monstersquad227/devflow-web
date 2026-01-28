@@ -185,14 +185,18 @@ const handleOk = async () => {
                 visible.value = false;
             }, 3 * 60 * 1000); // 3分钟
         } else {
-            confirmLoading.value = false;
-            visible.value = false;
+            const res = await deployProjects(data, props.project.id);
+            if (res) {
+                confirmLoading.value = false;
+                visible.value = false;
+            } else {
+                message.error("部署失败，请重试");
+                confirmLoading.value = false;
+            }
         }
-        await deployProjects(data, props.project.id);
+
         //
         //
-        // confirmLoading.value = false;
-        // visible.value = false;
     } catch (error) {
         console.log(error);
         confirmLoading.value = false;
