@@ -160,6 +160,16 @@ const envSelectChange = () => {
 const handleOk = async () => {
     confirmLoading.value = true;
     try {
+
+        await formRef.value.validate();
+        const envLabel = envOptions.value.find(item => item["value"] === formState.value.env)["label"];
+        // ✅ 检查生产环境只能选择1台机器
+        if (envLabel === 'prod' && formState.value.ecs.length !== 1) {
+            message.error("生产环境发布只能选择1台机器！");
+            confirmLoading.value = false;
+            return;
+        }
+
         const data = {
             name: formState.value.deployment_name,
             env: envOptions.value.find(item => item["value"] === formState.value.env)["label"],
@@ -167,11 +177,22 @@ const handleOk = async () => {
             tag: formState.value.tag,
             ecs: formState.value.ecs,
         }
-        await formRef.value.validate();
+        if (envLabel === 'prod') {
+            message.success("生产环境发布成功，弹窗将在3分钟后关闭");
+            await deployProjects(data, props.project.id);
+            setTimeout(() => {
+                confirmLoading.value = false;
+                visible.value = false;
+            }, 3 * 60 * 1000); // 3分钟
+        } else {
+            confirmLoading.value = false;
+            visible.value = false;
+        }
         await deployProjects(data, props.project.id);
-
-        confirmLoading.value = false;
-        visible.value = false;
+        //
+        //
+        // confirmLoading.value = false;
+        // visible.value = false;
     } catch (error) {
         console.log(error);
         confirmLoading.value = false;
