@@ -1,5 +1,5 @@
 # devflow-web
-
+pure version
 ## Project setup
 ```
 npm install
